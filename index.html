@@ -515,30 +515,31 @@
 
             const group = new THREE.Group();
             const materials = [
-                new THREE.MeshPhysicalMaterial({ color: 0xff5f7a, roughness: 0.02, metalness: 0.01, transmission: 0.99, transparent: true, opacity: state.theme === 'dark' ? 0.34 : 0.22, ior: 1.52, thickness: 1.55, clearcoat: 1, clearcoatRoughness: 0.015, attenuationColor: new THREE.Color(0xff5f7a), attenuationDistance: state.theme === 'dark' ? 2.6 : 3.6, emissive: new THREE.Color(0xff5f7a).multiplyScalar(state.theme === 'dark' ? 0.14 : 0.08), emissiveIntensity: state.theme === 'dark' ? 0.9 : 0.55 }),
-                new THREE.MeshPhysicalMaterial({ color: 0xffb347, roughness: 0.025, metalness: 0.01, transmission: 0.99, transparent: true, opacity: state.theme === 'dark' ? 0.32 : 0.2, ior: 1.52, thickness: 1.45, clearcoat: 1, clearcoatRoughness: 0.015, attenuationColor: new THREE.Color(0xffb347), attenuationDistance: state.theme === 'dark' ? 2.6 : 3.6, emissive: new THREE.Color(0xffb347).multiplyScalar(state.theme === 'dark' ? 0.14 : 0.08), emissiveIntensity: state.theme === 'dark' ? 0.9 : 0.55 }),
-                new THREE.MeshPhysicalMaterial({ color: 0x76d7ff, roughness: 0.02, metalness: 0.01, transmission: 0.99, transparent: true, opacity: state.theme === 'dark' ? 0.31 : 0.21, ior: 1.52, thickness: 1.5, clearcoat: 1, clearcoatRoughness: 0.015, attenuationColor: new THREE.Color(0x76d7ff), attenuationDistance: state.theme === 'dark' ? 2.6 : 3.6, emissive: new THREE.Color(0x76d7ff).multiplyScalar(state.theme === 'dark' ? 0.14 : 0.08), emissiveIntensity: state.theme === 'dark' ? 0.9 : 0.55 })
+                new THREE.MeshPhysicalMaterial({ color: 0xff5f7a, roughness: 0.01, metalness: 0.0, transmission: 1, transparent: true, opacity: state.theme === 'dark' ? 0.52 : 0.38, ior: 1.55, thickness: 2, clearcoat: 1, clearcoatRoughness: 0.01, attenuationColor: new THREE.Color(0xff5f7a), attenuationDistance: state.theme === 'dark' ? 1.9 : 2.6, emissive: new THREE.Color(0xff5f7a).multiplyScalar(state.theme === 'dark' ? 0.22 : 0.14), emissiveIntensity: state.theme === 'dark' ? 1.15 : 0.8 }),
+                new THREE.MeshPhysicalMaterial({ color: 0xffb347, roughness: 0.012, metalness: 0.0, transmission: 1, transparent: true, opacity: state.theme === 'dark' ? 0.5 : 0.36, ior: 1.55, thickness: 1.9, clearcoat: 1, clearcoatRoughness: 0.01, attenuationColor: new THREE.Color(0xffb347), attenuationDistance: state.theme === 'dark' ? 1.9 : 2.6, emissive: new THREE.Color(0xffb347).multiplyScalar(state.theme === 'dark' ? 0.22 : 0.14), emissiveIntensity: state.theme === 'dark' ? 1.15 : 0.8 }),
+                new THREE.MeshPhysicalMaterial({ color: 0x76d7ff, roughness: 0.01, metalness: 0.0, transmission: 1, transparent: true, opacity: state.theme === 'dark' ? 0.48 : 0.35, ior: 1.55, thickness: 2.05, clearcoat: 1, clearcoatRoughness: 0.01, attenuationColor: new THREE.Color(0x76d7ff), attenuationDistance: state.theme === 'dark' ? 1.9 : 2.6, emissive: new THREE.Color(0x76d7ff).multiplyScalar(state.theme === 'dark' ? 0.22 : 0.14), emissiveIntensity: state.theme === 'dark' ? 1.15 : 0.8 })
             ];
             const geometries = [
-                new THREE.SphereGeometry(0.75, 32, 32),
-                new THREE.TorusGeometry(0.75, 0.22, 20, 100),
-                new THREE.OctahedronGeometry(0.9, 0),
-                new THREE.IcosahedronGeometry(0.72, 0),
-                new THREE.TorusKnotGeometry(0.45, 0.16, 120, 16),
-                new THREE.BoxGeometry(0.9, 0.9, 0.9)
+                new THREE.SphereGeometry(1.05, 32, 32),
+                new THREE.TorusGeometry(1.0, 0.3, 20, 100),
+                new THREE.OctahedronGeometry(1.05, 0),
+                new THREE.IcosahedronGeometry(0.92, 0),
+                new THREE.TorusKnotGeometry(0.62, 0.2, 120, 16),
+                new THREE.BoxGeometry(1.1, 1.1, 1.1)
             ];
 
             geometries.forEach((geometry, index) => {
                 const mesh = new THREE.Mesh(geometry, materials[index % materials.length]);
                 mesh.position.set(
-                    THREE.MathUtils.randFloatSpread(8),
-                    THREE.MathUtils.randFloatSpread(5),
-                    THREE.MathUtils.randFloatSpread(6) - 3
+                    THREE.MathUtils.randFloatSpread(7),
+                    THREE.MathUtils.randFloatSpread(4.5),
+                    THREE.MathUtils.randFloatSpread(5) - 2.5
                 );
                 mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                mesh.scale.setScalar(1.1 + Math.random() * 0.55);
                 mesh.userData = {
                     speed: 0.002 + Math.random() * 0.003,
-                    drift: 0.004 + Math.random() * 0.006,
+                    drift: 0.006 + Math.random() * 0.01,
                     axis: new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize()
                 };
                 group.add(mesh);
@@ -557,7 +558,7 @@
                 );
             }
             backgroundGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particles, 3));
-            state.particles = new THREE.Points(backgroundGeometry, new THREE.PointsMaterial({ color: palette.particles, size: 0.02, transparent: true, opacity: state.theme === 'dark' ? 0.35 : 0.18 }));
+            state.particles = new THREE.Points(backgroundGeometry, new THREE.PointsMaterial({ color: palette.particles, size: 0.018, transparent: true, opacity: state.theme === 'dark' ? 0.28 : 0.14 }));
             state.scene.add(state.particles);
 
             window.addEventListener('resize', onResize);

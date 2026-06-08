@@ -274,26 +274,26 @@
                 gridGlow: 'rgba(255, 255, 255, 0.03)'
             },
             light: {
-                background: '#f4f7fb',
-                panel: 'rgba(255, 255, 255, 0.68)',
-                panelStrong: 'rgba(246, 248, 252, 0.92)',
-                border: 'rgba(16, 24, 40, 0.09)',
-                borderStrong: 'rgba(16, 24, 40, 0.16)',
+                background: '#edf0f4',
+                panel: 'rgba(245, 247, 250, 0.68)',
+                panelStrong: 'rgba(238, 242, 246, 0.92)',
+                border: 'rgba(16, 24, 40, 0.08)',
+                borderStrong: 'rgba(16, 24, 40, 0.14)',
                 text: '#0c1220',
                 muted: 'rgba(35, 47, 71, 0.76)',
                 soft: 'rgba(55, 71, 97, 0.62)',
-                accent: '#3aaee0',
-                accent2: '#d08f25',
-                orbOne: 'rgba(58, 174, 224, 0.32)',
-                orbTwo: 'rgba(139, 114, 255, 0.28)',
-                orbThree: 'rgba(89, 194, 132, 0.22)',
+                accent: '#5a91b8',
+                accent2: '#c38d38',
+                orbOne: 'rgba(58, 174, 224, 0.2)',
+                orbTwo: 'rgba(139, 114, 255, 0.16)',
+                orbThree: 'rgba(89, 194, 132, 0.12)',
                 scene: 0xf5f7fb,
-                glassA: 0xd7eefc,
-                glassB: 0xfafcff,
-                glassC: 0xe7ddff,
-                pointLight: 0x9fd3f6,
-                pointLightTwo: 0xc9b0ff,
-                particles: 0x6b7f94,
+                glassA: 0x9ec8e3,
+                glassB: 0xc5d3de,
+                glassC: 0xb8d8c6,
+                pointLight: 0x90b9d4,
+                pointLightTwo: 0xb6a1d9,
+                particles: 0x6a7b8b,
                 gridGlow: 'rgba(16, 24, 40, 0.05)'
             }
         };
@@ -350,18 +350,20 @@
                 state.particles.material.opacity = resolvedTheme === 'dark' ? 0.38 : 0.26;
             }
 
-            if (state.stars && state.stars.material) {
-                state.stars.material.color.setHex(palette.accent);
-                state.stars.material.opacity = resolvedTheme === 'dark' ? 0.1 : 0.08;
-            }
-
             if (state.shapes.length) {
                 state.shapes.forEach((shape, index) => {
                     const colors = [palette.glassA, palette.glassB, palette.glassC];
                     shape.material.color.setHex(colors[index % colors.length]);
-                    shape.material.opacity = resolvedTheme === 'dark' ? [0.82, 0.62, 0.65][index % 3] : [0.62, 0.84, 0.58][index % 3];
-                    shape.material.roughness = resolvedTheme === 'dark' ? [0.15, 0.05, 0.18][index % 3] : [0.08, 0.03, 0.1][index % 3];
-                    shape.material.metalness = resolvedTheme === 'dark' ? [0.25, 0.55, 0.2][index % 3] : [0.1, 0.22, 0.08][index % 3];
+                    shape.material.opacity = resolvedTheme === 'dark' ? [0.22, 0.16, 0.18][index % 3] : [0.14, 0.12, 0.13][index % 3];
+                    shape.material.roughness = resolvedTheme === 'dark' ? [0.03, 0.05, 0.04][index % 3] : [0.02, 0.03, 0.025][index % 3];
+                    shape.material.metalness = 0.02;
+                    shape.material.transmission = resolvedTheme === 'dark' ? 0.98 : 0.95;
+                    shape.material.ior = 1.48;
+                    shape.material.thickness = resolvedTheme === 'dark' ? 1.3 : 1.1;
+                    shape.material.clearcoat = 1;
+                    shape.material.clearcoatRoughness = 0.02;
+                    shape.material.attenuationColor = new THREE.Color(colors[index % colors.length]);
+                    shape.material.attenuationDistance = resolvedTheme === 'dark' ? 1.8 : 2.8;
                     shape.material.needsUpdate = true;
                 });
             }
@@ -478,9 +480,13 @@
             state.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             state.renderer.setSize(window.innerWidth, window.innerHeight);
             state.renderer.setClearColor(palette.background, 1);
+            state.renderer.physicallyCorrectLights = true;
+            state.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            state.renderer.toneMappingExposure = state.theme === 'dark' ? 1.05 : 0.95;
+            state.renderer.outputEncoding = THREE.sRGBEncoding;
             container.appendChild(state.renderer.domElement);
 
-            const ambient = new THREE.AmbientLight(0xffffff, state.theme === 'dark' ? 1.4 : 1.95);
+            const ambient = new THREE.AmbientLight(palette.accent, state.theme === 'dark' ? 0.8 : 1.1);
             state.scene.add(ambient);
 
             const pointLight = new THREE.PointLight(palette.pointLight, state.theme === 'dark' ? 3 : 2.3, 50);
@@ -493,9 +499,9 @@
 
             const group = new THREE.Group();
             const materials = [
-                new THREE.MeshPhysicalMaterial({ color: palette.glassA, roughness: state.theme === 'dark' ? 0.15 : 0.08, metalness: state.theme === 'dark' ? 0.25 : 0.1, transmission: state.theme === 'dark' ? 0.42 : 0.3, transparent: true, opacity: state.theme === 'dark' ? 0.82 : 0.62 }),
-                new THREE.MeshPhysicalMaterial({ color: palette.glassB, roughness: state.theme === 'dark' ? 0.05 : 0.03, metalness: state.theme === 'dark' ? 0.55 : 0.22, transmission: state.theme === 'dark' ? 0.28 : 0.18, transparent: true, opacity: state.theme === 'dark' ? 0.62 : 0.84 }),
-                new THREE.MeshPhysicalMaterial({ color: palette.glassC, roughness: state.theme === 'dark' ? 0.18 : 0.1, metalness: state.theme === 'dark' ? 0.2 : 0.08, transmission: state.theme === 'dark' ? 0.35 : 0.24, transparent: true, opacity: state.theme === 'dark' ? 0.65 : 0.58 })
+                new THREE.MeshPhysicalMaterial({ color: palette.glassA, roughness: 0.03, metalness: 0.02, transmission: 0.98, transparent: true, opacity: state.theme === 'dark' ? 0.22 : 0.14, ior: 1.48, thickness: 1.3, clearcoat: 1, clearcoatRoughness: 0.02, attenuationColor: new THREE.Color(palette.glassA), attenuationDistance: state.theme === 'dark' ? 1.8 : 2.8 }),
+                new THREE.MeshPhysicalMaterial({ color: palette.glassB, roughness: 0.04, metalness: 0.02, transmission: 0.97, transparent: true, opacity: state.theme === 'dark' ? 0.16 : 0.12, ior: 1.5, thickness: 1.1, clearcoat: 1, clearcoatRoughness: 0.03, attenuationColor: new THREE.Color(palette.glassB), attenuationDistance: state.theme === 'dark' ? 1.9 : 3.1 }),
+                new THREE.MeshPhysicalMaterial({ color: palette.glassC, roughness: 0.03, metalness: 0.02, transmission: 0.98, transparent: true, opacity: state.theme === 'dark' ? 0.18 : 0.13, ior: 1.47, thickness: 1.2, clearcoat: 1, clearcoatRoughness: 0.02, attenuationColor: new THREE.Color(palette.glassC), attenuationDistance: state.theme === 'dark' ? 1.8 : 2.9 })
             ];
             const geometries = [
                 new THREE.SphereGeometry(0.75, 32, 32),
@@ -538,12 +544,6 @@
             state.particles = new THREE.Points(backgroundGeometry, new THREE.PointsMaterial({ color: palette.particles, size: 0.025, transparent: true, opacity: state.theme === 'dark' ? 0.45 : 0.25 }));
             state.scene.add(state.particles);
 
-            const ringGeometry = new THREE.TorusGeometry(3.5, 0.08, 12, 180);
-            const ringMaterial = new THREE.MeshBasicMaterial({ color: palette.accent, wireframe: true, transparent: true, opacity: state.theme === 'dark' ? 0.1 : 0.08 });
-            state.stars = new THREE.Mesh(ringGeometry, ringMaterial);
-            state.stars.rotation.x = 1.4;
-            state.scene.add(state.stars);
-
             window.addEventListener('resize', onResize);
             window.addEventListener('pointermove', onPointerMove, { passive: true });
         }
@@ -574,10 +574,6 @@
             if (state.particles) {
                 state.particles.rotation.y += 0.0004;
                 state.particles.rotation.x += 0.00015;
-            }
-
-            if (state.stars) {
-                state.stars.rotation.z += 0.0008;
             }
 
             state.camera.position.x += (state.mouseX * 0.85 - state.camera.position.x) * 0.03;

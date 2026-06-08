@@ -3,359 +3,490 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Developer Portfolio | GitHub Style</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-
-        :root {
-            --gh-bg: #0d1117;
-            --gh-border: #30363d;
-            --gh-card: #161b22;
-            --gh-text: #c9d1d9;
-            --gh-link: #58a6ff;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--gh-bg);
-            color: var(--gh-text);
-            overflow-x: hidden;
-        }
-
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
-        }
-
-        .glass-header {
-            background: rgba(13, 17, 23, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--gh-border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .project-card {
-            background: var(--gh-card);
-            border: 1px solid var(--gh-border);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .project-card:hover {
-            transform: translateY(-5px);
-            border-color: #8b949e;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .project-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: 0.5s;
-        }
-
-        .project-card:hover::after {
-            left: 100%;
-        }
-
-        .avatar-glow {
-            box-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
-            border: 2px solid var(--gh-link);
-        }
-
-        .tag {
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 12px;
-            border: 1px solid var(--gh-border);
-            background: rgba(48, 54, 61, 0.5);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--gh-bg);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--gh-border);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #484f58;
-        }
-    </style>
+    <meta name="description" content="A liquid-glass GitHub Pages landing page with animated 3D background and project showcase.">
+    <title>Example 1 | Liquid Glass Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 </head>
 <body>
+    <div id="canvas-container" aria-hidden="true"></div>
+    <div class="orb orb-one" aria-hidden="true"></div>
+    <div class="orb orb-two" aria-hidden="true"></div>
+    <div class="orb orb-three" aria-hidden="true"></div>
 
-    <div id="canvas-container"></div>
-
-    <header class="glass-header py-4 px-6">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <svg height="32" viewBox="0 0 16 16" width="32" fill="white">
-                    <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
-                </svg>
-                <span class="font-semibold text-lg">GitHub Portfolio</span>
+    <header class="topbar glass-panel">
+        <div class="brand-lockup">
+            <div class="brand-mark">E1</div>
+            <div>
+                <div class="eyebrow">GitHub Pages landing page</div>
+                <strong>Example 1</strong>
             </div>
-            <nav class="hidden md:flex space-x-6 text-sm font-medium">
-                <a href="#" class="hover:text-white transition">Overview</a>
-                <a href="#" class="text-white border-b-2 border-orange-500 pb-1">Repositories</a>
-                <a href="#" class="hover:text-white transition">Projects</a>
-                <a href="#" class="hover:text-white transition">Packages</a>
-            </nav>
         </div>
+        <nav class="topnav">
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row gap-8">
-        <!-- Profile Sidebar -->
-        <aside class="w-full md:w-1/4">
-            <div class="relative group">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Avatar" class="w-full rounded-full avatar-glow mb-6 bg-slate-800">
-                <div class="absolute bottom-10 right-4 bg-gray-900 border border-gray-700 p-2 rounded-full hidden group-hover:block">
-                    🚀 Working on something cool
-                </div>
-            </div>
-            <h1 class="text-2xl font-bold text-white mb-1">Felix Dev</h1>
-            <p class="text-xl text-gray-400 mb-4">Fullstack Sorcerer</p>
-            <button class="w-full bg-[#21262d] border border-gray-700 hover:bg-[#30363d] text-white py-2 rounded-md font-medium mb-6 transition">
-                Follow
-            </button>
-            <div class="space-y-3 text-sm text-gray-300">
-                <div class="flex items-center">
-                    <svg class="mr-2" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2 5.5a3.5 3.5 0 1 1 5.898 2.549 5.508 5.508 0 0 1 3.034 4.084.75.75 0 1 1-1.482.235 4 4 0 0 0-7.9 0 .75.75 0 0 1-1.482-.236 5.507 5.507 0 0 1 3.102-4.083A3.477 3.477 0 0 1 2 5.5ZM5.5 5a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"></path></svg>
-                    <span>2.4k followers · 182 following</span>
-                </div>
-                <div class="flex items-center">
-                    <svg class="mr-2" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M1.75 2h12.5c.966 0 1.75.784 1.75 1.75v9.5A1.75 1.75 0 0 1 14.25 15H1.75A1.75 1.75 0 0 1 0 13.25v-9.5C0 2.784.784 2 1.75 2ZM1.5 3.75v.728l6.5 3.31 6.5-3.31v-.728a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25Z"></path></svg>
-                    <a href="mailto:hello@felix.dev" class="hover:text-blue-400">hello@felix.dev</a>
-                </div>
-            </div>
-        </aside>
+    <main class="shell">
+        <section class="hero-grid">
+            <article class="hero-copy glass-panel reveal">
+                <p class="eyebrow">Highlighted up front</p>
+                <h1>Example 1 builds polished interfaces, practical systems, and memorable web experiences.</h1>
+                <p class="hero-text">
+                    This space is for example-driven positioning: product-minded engineering, expressive visuals, and a bias toward shipping.
+                    It is tuned for people who care about refined UI, clear architecture, and motion that supports the message instead of hiding it.
+                </p>
 
-        <!-- Projects Grid -->
-        <section class="w-full md:w-3/4">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-semibold text-white">Popular Repositories</h2>
-                <span class="text-xs text-gray-500 uppercase tracking-widest">Showing 6 of 42</span>
-            </div>
-            
-            <div id="projects-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Projects will be injected here -->
+                <div class="skill-strip" aria-label="Skills and interests">
+                    <span>Liquid UI design</span>
+                    <span>3D motion systems</span>
+                    <span>Rust and web tooling</span>
+                    <span>Prototype-to-product work</span>
+                    <span>Open source polish</span>
+                </div>
+
+                <div class="cta-row">
+                    <a class="button reflective" href="#projects">View featured work</a>
+                    <a class="button ghost" href="#contact">Work with me</a>
+                </div>
+            </article>
+
+            <aside class="profile-card glass-panel reveal">
+                <div class="profile-badge">Example 1</div>
+                <img class="avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=example-1" alt="Illustrated avatar for Example 1">
+                <h2>Example 1</h2>
+                <p class="role">Builder of elegant tools, expressive pages, and dependable shipping pipelines.</p>
+
+                <dl class="stat-grid">
+                    <div>
+                        <dt>Focus</dt>
+                        <dd>Design-forward engineering</dd>
+                    </div>
+                    <div>
+                        <dt>Strengths</dt>
+                        <dd>Systems, polish, motion</dd>
+                    </div>
+                    <div>
+                        <dt>Qualification</dt>
+                        <dd>Example certification, example 1</dd>
+                    </div>
+                    <div>
+                        <dt>Interest</dt>
+                        <dd>Interactive visuals and tooling</dd>
+                    </div>
+                </dl>
+            </aside>
+        </section>
+
+        <section id="about" class="section-block reveal">
+            <div class="section-heading">
+                <p class="eyebrow">About</p>
+                <h2>What I care about</h2>
             </div>
 
-            <div class="mt-12">
-                <h2 class="text-xl font-semibold text-white mb-6">Contribution Activity</h2>
-                <div class="bg-gray-900/50 border border-gray-800 rounded-lg p-6 flex flex-wrap gap-1 justify-center">
-                    <!-- GitHub contribution dots simulation -->
-                    <script>
-                        for(let i=0; i<150; i++) {
-                            const opacity = [0.1, 0.3, 0.6, 0.9][Math.floor(Math.random() * 4)];
-                            document.write(`<div style="width: 12px; height: 12px; border-radius: 2px; background: rgba(57, 211, 83, ${opacity});"></div>`);
-                        }
-                    </script>
+            <div class="about-grid">
+                <article class="glass-panel about-card">
+                    <h3>Interests</h3>
+                    <p>Example 1 enjoys interfaces that feel tactile, story-driven, and slightly futuristic.</p>
+                    <ul>
+                        <li>Ambient motion and generative visuals</li>
+                        <li>Fast front ends with careful detail</li>
+                        <li>Lean systems that stay maintainable</li>
+                    </ul>
+                </article>
+
+                <article class="glass-panel about-card">
+                    <h3>Skills</h3>
+                    <p>Replace the filler data here with your actual strengths when you are ready.</p>
+                    <ul>
+                        <li>Rust, TypeScript, and modern JavaScript</li>
+                        <li>Three.js, CSS animation, and UI composition</li>
+                        <li>Accessible layouts and responsive systems</li>
+                    </ul>
+                </article>
+
+                <article class="glass-panel about-card">
+                    <h3>Qualifications</h3>
+                    <p>Use this section to surface the strongest proof points immediately.</p>
+                    <ul>
+                        <li>Example qualification one</li>
+                        <li>Example qualification two</li>
+                        <li>Example qualification three</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section id="projects" class="section-block reveal">
+            <div class="section-heading split">
+                <div>
+                    <p class="eyebrow">Showcase</p>
+                    <h2>Selected projects</h2>
+                </div>
+                <p class="section-note">Each tile opens the repository. If a project has a live website, a second action is shown.</p>
+            </div>
+
+            <div id="projects-grid" class="projects-grid" aria-live="polite"></div>
+        </section>
+
+        <section id="contact" class="section-block reveal">
+            <div class="contact-panel glass-panel">
+                <div>
+                    <p class="eyebrow">Contact</p>
+                    <h2>Make the page yours later</h2>
+                    <p class="section-note">This version uses filler data like Example 1 so you can swap in your real profile and repositories without changing the structure.</p>
+                </div>
+                <div class="cta-row compact">
+                    <a class="button reflective" href="mailto:hello@example.com">Email me</a>
+                    <a class="button ghost" href="https://github.com/brucebravehart" target="_blank" rel="noreferrer">GitHub</a>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="max-w-6xl mx-auto px-6 py-12 border-t border-gray-800 text-sm text-gray-500 flex justify-between">
-        <div>© 2024 Felix Dev. Built with Three.js</div>
-        <div class="flex space-x-4">
-            <a href="#" class="hover:text-blue-400">Terms</a>
-            <a href="#" class="hover:text-blue-400">Privacy</a>
-            <a href="#" class="hover:text-blue-400">Status</a>
-        </div>
+    <footer class="footer">
+        <p>Built as a liquid-glass GitHub Pages landing page with animated 3D background.</p>
+        <p>Example 1 · 2026</p>
     </footer>
 
     <script>
-        // --- DATA ---
-        const projects = [
-            {
-                name: "quantum-engine",
-                desc: "A high-performance physics engine written in Rust and WebAssembly.",
-                lang: "Rust",
-                color: "#dea584",
-                stars: "1.2k",
-                link: "https://github.com"
+        const fallbackData = {
+            profile: {
+                name: 'Example 1',
+                title: 'GitHub Pages landing page',
+                hero: 'Example 1 builds polished interfaces, practical systems, and memorable web experiences.',
+                summary: 'This space is for example-driven positioning: product-minded engineering, expressive visuals, and a bias toward shipping. It is tuned for people who care about refined UI, clear architecture, and motion that supports the message instead of hiding it.',
+                role: 'Builder of elegant tools, expressive pages, and dependable shipping pipelines.',
+                skills: ['Liquid UI design', '3D motion systems', 'Rust and web tooling', 'Prototype-to-product work', 'Open source polish'],
+                focus: 'Design-forward engineering',
+                strengths: 'Systems, polish, motion',
+                qualification: 'Example certification, example 1',
+                interest: 'Interactive visuals and tooling',
+                interestsSummary: 'Example 1 enjoys interfaces that feel tactile, story-driven, and slightly futuristic.',
+                interests: ['Ambient motion and generative visuals', 'Fast front ends with careful detail', 'Lean systems that stay maintainable'],
+                skillsSummary: 'Replace the filler data here with your actual strengths when you are ready.',
+                skillsDetail: ['Rust, TypeScript, and modern JavaScript', 'Three.js, CSS animation, and UI composition', 'Accessible layouts and responsive systems'],
+                qualificationsSummary: 'Use this section to surface the strongest proof points immediately.',
+                qualifications: ['Example qualification one', 'Example qualification two', 'Example qualification three']
             },
-            {
-                name: "neural-style-transfer",
-                desc: "Real-time video style transfer using TensorFlow.js and custom shaders.",
-                lang: "JavaScript",
-                color: "#f1e05a",
-                stars: "842",
-                link: "https://github.com"
-            },
-            {
-                name: "nebula-ui",
-                desc: "A neo-brutalist component library for modern React applications.",
-                lang: "TypeScript",
-                color: "#3178c6",
-                stars: "2.5k",
-                link: "https://github.com"
-            },
-            {
-                name: "distributed-db",
-                desc: "Lightweight key-value store with Raft consensus algorithm implementation.",
-                lang: "Go",
-                color: "#00add8",
-                stars: "430",
-                link: "https://github.com"
-            },
-            {
-                name: "portfolio-3d",
-                desc: "The source code for this very page, featuring Three.js particles.",
-                lang: "HTML",
-                color: "#e34c26",
-                stars: "156",
-                link: "https://github.com"
-            },
-            {
-                name: "auto-scaler",
-                desc: "Kubernetes operator for dynamic resource allocation based on ML predictions.",
-                lang: "Python",
-                color: "#3572A5",
-                stars: "912",
-                link: "https://github.com"
-            }
-        ];
+            projects: [
+                {
+                    name: 'example 1',
+                    tag: 'Showcase',
+                    description: 'A reflective dashboard concept with animated panels, layered blur, and a calm information hierarchy.',
+                    repo: 'https://github.com/example/example-1',
+                    website: 'https://example.com',
+                    image: 'https://picsum.photos/seed/example-1/900/700',
+                    icon: 'rocket',
+                    tech: ['TypeScript', 'Glass UI', 'Motion'],
+                    accent: '#8be9ff'
+                },
+                {
+                    name: 'example 2',
+                    tag: 'Utility',
+                    description: 'An experimental layout system for compact content cards and bold call-to-action sections.',
+                    repo: 'https://github.com/example/example-2',
+                    website: null,
+                    image: 'https://picsum.photos/seed/example-2/900/700',
+                    icon: 'cube',
+                    tech: ['Rust', 'Systems', 'Layout'],
+                    accent: '#ffd166'
+                },
+                {
+                    name: 'example 3',
+                    tag: 'Portfolio',
+                    description: 'A content-first portfolio module designed to highlight projects without feeling boxy or repetitive.',
+                    repo: 'https://github.com/example/example-3',
+                    website: 'https://example.org',
+                    image: 'https://picsum.photos/seed/example-3/900/700',
+                    icon: 'spark',
+                    tech: ['JavaScript', 'Content', 'Showcase'],
+                    accent: '#ffafcc'
+                },
+                {
+                    name: 'example 4',
+                    tag: 'Component',
+                    description: 'A component exploration focused on buttons, sheen effects, and animated depth cues.',
+                    repo: 'https://github.com/example/example-4',
+                    website: null,
+                    image: 'https://picsum.photos/seed/example-4/900/700',
+                    icon: 'shield',
+                    tech: ['CSS', 'Buttons', 'UI'],
+                    accent: '#cdb4db'
+                }
+            ]
+        };
 
-        // --- RENDER PROJECTS ---
-        const container = document.getElementById('projects-container');
-        projects.forEach(p => {
-            const card = document.createElement('div');
-            card.className = 'project-card p-4 rounded-lg flex flex-col justify-between';
-            card.onclick = () => window.open(p.link, '_blank');
-            card.innerHTML = `
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-blue-400 font-semibold hover:underline flex items-center">
-                            <svg class="mr-2" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7c.001.001.003.003.005.005l.647.646a.75.75 0 0 1-1.06 1.06l-.647-.646A2.5 2.5 0 0 1 2 13.5Zm11.25 8.5v-8h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8.75ZM4.5 1.5a1 1 0 0 0-1 1V8.5h8.25v-7h-7.25Z"></path></svg>
-                            ${p.name}
-                        </span>
-                        <span class="tag text-gray-400 border-gray-700">Public</span>
-                    </div>
-                    <p class="text-sm text-gray-400 mb-4 line-clamp-2">${p.desc}</p>
+        const state = {
+            data: null,
+            mouseX: 0,
+            mouseY: 0,
+            scene: null,
+            camera: null,
+            renderer: null,
+            shapes: [],
+            particles: null,
+            stars: null
+        };
+
+        const projectIcons = {
+            rocket: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3c3.5.3 6.7 3.5 7 7-.1 2.9-1.7 5.8-4.4 7.7l-1 3.7c-.1.3-.4.5-.7.4l-2.7-1.2-2.2 1.8c-.2.2-.5.2-.8.1-.3-.1-.5-.4-.4-.7l.7-3.2c-1.4-.5-2.7-1.2-3.9-2.2L3.2 15c-.2-.2-.3-.5-.2-.8.1-.3.3-.5.6-.6l3.1-.8c1-2.4 2.7-4.5 4.8-6.1C12.7 5.2 13.3 3.9 14 3Zm1.1 3.7c-1.8.2-3.8 1.3-5.5 3.1-1.5 1.5-2.6 3.3-3.1 5.1l2.2 2.2c1.8-.5 3.5-1.6 5-3.1 1.8-1.7 2.9-3.7 3.1-5.5-1.4-.9-1.7-1.2-1.7-1.8Zm1.8 2.3c-.5 1.4-1.4 2.8-2.6 4-1.2 1.2-2.6 2.1-4 2.6l1.7 1.7 1.4-.4.4-1.4 1.7-1.7 1.4-.4.4-1.4 1.7-1.7c-.1-.7-.3-1.5-.7-2.3ZM15 8.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"></path></svg>',
+            cube: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4.6v9L12 20 4 15.6v-9L12 2Zm0 2.3-5.7 3.3L12 11l5.7-3.4L12 4.3Zm-6 5v6.9L11 17v-6.9L6 9.3Zm12 0-5 2.8v6.9l5-2.8V9.3Z"></path></svg>',
+            spark: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 1.7 5.2L19 9l-5.3 1.8L12 16l-1.7-5.2L5 9l5.3-1.8L12 2Zm7 10 1.1 3.2L23 17l-2.9 1-1 2.9-1-2.9-2.9-1 2.9-1 1-3 1-.9ZM4 13l1.1 3.2L8 17l-2.9 1L4 21l-1.1-3-2.9-1 2.9-1L4 13Z"></path></svg>',
+            shield: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 20 5v6c0 5.2-3.5 9.9-8 11-4.5-1.1-8-5.8-8-11V5l8-3Zm0 3.1L6 7v4c0 3.8 2.4 7.3 6 8.5 3.6-1.2 6-4.7 6-8.5V7l-6-1.9Zm-1 3.2h2v6h-2v-6Zm0 7.2h2v2h-2v-2Z"></path></svg>'
+        };
+
+        function iconMarkup(name) {
+            return projectIcons[name] || projectIcons.spark;
+        }
+
+        function createProjectCard(project) {
+            const article = document.createElement('article');
+            article.className = 'project-card glass-panel';
+            article.style.setProperty('--project-accent', project.accent);
+
+            article.innerHTML = `
+                <button class="project-hit" type="button" aria-label="Open ${project.name} repository"></button>
+                <div class="project-media">
+                    <img src="${project.image}" alt="Preview for ${project.name}">
+                    <div class="project-icon">${iconMarkup(project.icon)}</div>
                 </div>
-                <div class="flex items-center space-x-4 text-xs text-gray-400">
-                    <div class="flex items-center">
-                        <span class="w-3 h-3 rounded-full mr-1" style="background-color: ${p.color}"></span>
-                        <span>${p.lang}</span>
+                <div class="project-copy">
+                    <div class="project-topline">
+                        <div>
+                            <p class="project-label">${project.tag}</p>
+                            <h3>${project.name}</h3>
+                        </div>
+                        <span class="repo-pill">Repository</span>
                     </div>
-                    <div class="flex items-center">
-                        <svg class="mr-1" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"></path></svg>
-                        <span>${p.stars}</span>
+                    <p class="project-desc">${project.description}</p>
+                    <div class="project-tech">
+                        ${project.tech.map((item) => `<span>${item}</span>`).join('')}
                     </div>
+                </div>
+                <div class="project-actions">
+                    <a class="button reflective small" href="${project.repo}" target="_blank" rel="noreferrer">Open repo</a>
+                    ${project.website ? `<a class="button ghost small" href="${project.website}" target="_blank" rel="noreferrer">Visit site</a>` : ''}
                 </div>
             `;
-            container.appendChild(card);
-        });
 
-        // --- THREE.JS BACKGROUND ---
-        let scene, camera, renderer, particles;
-        let mouseX = 0, mouseY = 0;
+            article.querySelector('.project-hit').addEventListener('click', () => {
+                window.open(project.repo, '_blank', 'noreferrer');
+            });
+
+            article.addEventListener('click', (event) => {
+                if (event.target.closest('a')) {
+                    return;
+                }
+                window.open(project.repo, '_blank', 'noreferrer');
+            });
+
+            return article;
+        }
+
+        async function loadContent() {
+            try {
+                const response = await fetch('script.json', { cache: 'no-store' });
+                state.data = response.ok ? await response.json() : fallbackData;
+            } catch (error) {
+                state.data = fallbackData;
+            }
+
+            document.title = `${state.data.profile.name} | ${state.data.profile.title}`;
+
+            const projectsGrid = document.getElementById('projects-grid');
+            projectsGrid.innerHTML = '';
+            state.data.projects.forEach((project) => {
+                const card = createProjectCard(project);
+                projectsGrid.appendChild(card);
+
+                if (observer) {
+                    observer.observe(card);
+                } else {
+                    card.classList.add('visible');
+                }
+            });
+
+            const heroCopy = document.querySelector('.hero-copy h1');
+            heroCopy.textContent = state.data.profile.hero;
+            document.querySelector('.hero-text').textContent = state.data.profile.summary;
+            document.querySelector('.profile-card h2').textContent = state.data.profile.name;
+            document.querySelector('.profile-card .role').textContent = state.data.profile.role;
+            document.querySelector('.brand-lockup strong').textContent = state.data.profile.name;
+            document.querySelector('.topbar .eyebrow').textContent = state.data.profile.title;
+
+            const skillStrip = document.querySelector('.skill-strip');
+            skillStrip.innerHTML = state.data.profile.skills.map((skill) => `<span>${skill}</span>`).join('');
+
+            const statValues = document.querySelectorAll('.stat-grid dd');
+            statValues[0].textContent = state.data.profile.focus;
+            statValues[1].textContent = state.data.profile.strengths;
+            statValues[2].textContent = state.data.profile.qualification;
+            statValues[3].textContent = state.data.profile.interest;
+
+            const aboutCards = document.querySelectorAll('.about-card');
+            aboutCards[0].querySelector('p').textContent = state.data.profile.interestsSummary;
+            aboutCards[0].querySelector('ul').innerHTML = state.data.profile.interests.map((item) => `<li>${item}</li>`).join('');
+            aboutCards[1].querySelector('p').textContent = state.data.profile.skillsSummary;
+            aboutCards[1].querySelector('ul').innerHTML = state.data.profile.skillsDetail.map((item) => `<li>${item}</li>`).join('');
+            aboutCards[2].querySelector('p').textContent = state.data.profile.qualificationsSummary;
+            aboutCards[2].querySelector('ul').innerHTML = state.data.profile.qualifications.map((item) => `<li>${item}</li>`).join('');
+        }
 
         function initThree() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
+            const container = document.getElementById('canvas-container');
+            state.scene = new THREE.Scene();
+            state.camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 100);
+            state.camera.position.set(0, 0, 10);
 
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            state.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            state.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            state.renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(state.renderer.domElement);
 
-            // Particles
-            const geometry = new THREE.BufferGeometry();
-            const vertices = [];
-            for (let i = 0; i < 5000; i++) {
-                vertices.push(
-                    THREE.MathUtils.randFloatSpread(20),
-                    THREE.MathUtils.randFloatSpread(20),
+            const ambient = new THREE.AmbientLight(0xffffff, 1.4);
+            state.scene.add(ambient);
+
+            const pointLight = new THREE.PointLight(0x7fd3ff, 3, 50);
+            pointLight.position.set(4, 5, 8);
+            state.scene.add(pointLight);
+
+            const secondLight = new THREE.PointLight(0xff8bd4, 2, 40);
+            secondLight.position.set(-6, -2, 6);
+            state.scene.add(secondLight);
+
+            const group = new THREE.Group();
+            const materials = [
+                new THREE.MeshPhysicalMaterial({ color: 0x7fd3ff, roughness: 0.15, metalness: 0.25, transparent: true, opacity: 0.82 }),
+                new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.05, metalness: 0.55, transparent: true, opacity: 0.62 }),
+                new THREE.MeshPhysicalMaterial({ color: 0xffa0df, roughness: 0.18, metalness: 0.2, transparent: true, opacity: 0.65 })
+            ];
+            const geometries = [
+                new THREE.SphereGeometry(0.75, 32, 32),
+                new THREE.TorusGeometry(0.75, 0.22, 20, 100),
+                new THREE.OctahedronGeometry(0.9, 0),
+                new THREE.IcosahedronGeometry(0.72, 0),
+                new THREE.TorusKnotGeometry(0.45, 0.16, 120, 16),
+                new THREE.BoxGeometry(0.9, 0.9, 0.9)
+            ];
+
+            geometries.forEach((geometry, index) => {
+                const mesh = new THREE.Mesh(geometry, materials[index % materials.length]);
+                mesh.position.set(
+                    THREE.MathUtils.randFloatSpread(8),
+                    THREE.MathUtils.randFloatSpread(5),
+                    THREE.MathUtils.randFloatSpread(6) - 3
+                );
+                mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                mesh.userData = {
+                    speed: 0.002 + Math.random() * 0.003,
+                    drift: 0.004 + Math.random() * 0.006,
+                    axis: new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize()
+                };
+                group.add(mesh);
+                state.shapes.push(mesh);
+            });
+
+            state.scene.add(group);
+
+            const backgroundGeometry = new THREE.BufferGeometry();
+            const particles = [];
+            for (let index = 0; index < 1200; index += 1) {
+                particles.push(
+                    THREE.MathUtils.randFloatSpread(30),
+                    THREE.MathUtils.randFloatSpread(30),
                     THREE.MathUtils.randFloatSpread(20)
                 );
             }
-            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            backgroundGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particles, 3));
+            state.particles = new THREE.Points(
+                backgroundGeometry,
+                new THREE.PointsMaterial({ color: 0xffffff, size: 0.025, transparent: true, opacity: 0.45 })
+            );
+            state.scene.add(state.particles);
 
-            const material = new THREE.PointsMaterial({
-                color: 0x58a6ff,
-                size: 0.02,
-                transparent: true,
-                opacity: 0.5
-            });
+            const ringGeometry = new THREE.TorusGeometry(3.5, 0.08, 12, 180);
+            const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x7fd3ff, wireframe: true, transparent: true, opacity: 0.1 });
+            state.stars = new THREE.Mesh(ringGeometry, ringMaterial);
+            state.stars.rotation.x = 1.4;
+            state.scene.add(state.stars);
 
-            particles = new THREE.Points(geometry, material);
-            scene.add(particles);
-
-            // Subtle Geometry in distance
-            const torusGeo = new THREE.TorusGeometry(3, 0.8, 16, 100);
-            const torusMat = new THREE.MeshBasicMaterial({ 
-                color: 0x58a6ff, 
-                wireframe: true, 
-                transparent: true, 
-                opacity: 0.05 
-            });
-            const torus = new THREE.Mesh(torusGeo, torusMat);
-            scene.add(torus);
-            window.torus = torus;
-
-            window.addEventListener('resize', onWindowResize);
-            document.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('resize', onResize);
+            window.addEventListener('pointermove', onPointerMove, { passive: true });
         }
 
-        function onMouseMove(event) {
-            mouseX = (event.clientX - window.innerWidth / 2) / 100;
-            mouseY = (event.clientY - window.innerHeight / 2) / 100;
+        function onPointerMove(event) {
+            state.mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
+            state.mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
         }
 
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        function onResize() {
+            state.camera.aspect = window.innerWidth / window.innerHeight;
+            state.camera.updateProjectionMatrix();
+            state.renderer.setSize(window.innerWidth, window.innerHeight);
         }
 
         function animate() {
             requestAnimationFrame(animate);
 
-            particles.rotation.x += 0.0005;
-            particles.rotation.y += 0.0005;
+            state.shapes.forEach((shape, index) => {
+                const speed = shape.userData.speed;
+                const drift = shape.userData.drift;
+                shape.rotation.x += speed;
+                shape.rotation.y += speed * 1.4;
+                shape.position.x += Math.sin(Date.now() * 0.0004 + index) * drift * 0.08;
+                shape.position.y += Math.cos(Date.now() * 0.00035 + index) * drift * 0.08;
+            });
 
-            // Follow mouse movement
-            camera.position.x += (mouseX - camera.position.x) * 0.05;
-            camera.position.y += (-mouseY - camera.position.y) * 0.05;
-            camera.lookAt(scene.position);
-
-            if(window.torus) {
-                window.torus.rotation.x += 0.001;
-                window.torus.rotation.y += 0.002;
+            if (state.particles) {
+                state.particles.rotation.y += 0.0004;
+                state.particles.rotation.x += 0.00015;
             }
 
-            renderer.render(scene, camera);
+            if (state.stars) {
+                state.stars.rotation.z += 0.0008;
+            }
+
+            state.camera.position.x += (state.mouseX * 0.85 - state.camera.position.x) * 0.03;
+            state.camera.position.y += (-state.mouseY * 0.55 - state.camera.position.y) * 0.03;
+            state.camera.lookAt(0, 0, 0);
+
+            state.renderer.render(state.scene, state.camera);
         }
 
-        window.onload = () => {
-            initThree();
-            animate();
-        };
+        Promise.all([loadContent(), new Promise((resolve) => window.addEventListener('load', resolve, { once: true }))])
+            .then(() => {
+                initThree();
+                animate();
+                document.body.classList.add('ready');
+            })
+            .catch((error) => {
+                console.error(error);
+                document.body.classList.add('ready');
+            });
+
+        const observer = 'IntersectionObserver' in window
+            ? new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.2 })
+            : null;
+
+        document.querySelectorAll('.reveal').forEach((element) => {
+            if (observer) {
+                observer.observe(element);
+            } else {
+                element.classList.add('visible');
+            }
+        });
     </script>
 </body>
 </html>

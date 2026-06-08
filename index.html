@@ -25,10 +25,13 @@
                 <strong>Example 1</strong>
             </div>
         </div>
-        <nav class="topnav">
+        <nav class="topnav" aria-label="Primary">
             <a href="#about">About</a>
             <a href="#projects">Projects</a>
             <a href="#contact">Contact</a>
+            <button class="theme-toggle button ghost small" id="theme-toggle" type="button" aria-pressed="false">
+                <span class="theme-toggle-label" id="theme-toggle-label">Dark mode</span>
+            </button>
         </nav>
     </header>
 
@@ -231,7 +234,8 @@
             renderer: null,
             shapes: [],
             particles: null,
-            stars: null
+            stars: null,
+            theme: 'dark'
         };
 
         const projectIcons = {
@@ -243,6 +247,130 @@
 
         function iconMarkup(name) {
             return projectIcons[name] || projectIcons.spark;
+        }
+
+        const themeConfig = {
+            dark: {
+                background: '#090c12',
+                panel: 'rgba(10, 16, 30, 0.56)',
+                panelStrong: 'rgba(14, 22, 40, 0.72)',
+                border: 'rgba(235, 247, 255, 0.16)',
+                borderStrong: 'rgba(255, 255, 255, 0.24)',
+                text: '#f7fbff',
+                muted: 'rgba(226, 236, 248, 0.72)',
+                soft: 'rgba(201, 216, 235, 0.58)',
+                accent: '#8be9ff',
+                accent2: '#ffd166',
+                orbOne: 'rgba(139, 233, 255, 0.95)',
+                orbTwo: 'rgba(205, 180, 255, 0.88)',
+                orbThree: 'rgba(159, 247, 200, 0.72)',
+                scene: 0x0d1017,
+                glassA: 0x8be9ff,
+                glassB: 0xffffff,
+                glassC: 0xffa0df,
+                pointLight: 0x7fd3ff,
+                pointLightTwo: 0xff8bd4,
+                particles: 0xffffff,
+                gridGlow: 'rgba(255, 255, 255, 0.03)'
+            },
+            light: {
+                background: '#f4f7fb',
+                panel: 'rgba(255, 255, 255, 0.68)',
+                panelStrong: 'rgba(246, 248, 252, 0.92)',
+                border: 'rgba(16, 24, 40, 0.09)',
+                borderStrong: 'rgba(16, 24, 40, 0.16)',
+                text: '#0c1220',
+                muted: 'rgba(35, 47, 71, 0.76)',
+                soft: 'rgba(55, 71, 97, 0.62)',
+                accent: '#3aaee0',
+                accent2: '#d08f25',
+                orbOne: 'rgba(58, 174, 224, 0.32)',
+                orbTwo: 'rgba(139, 114, 255, 0.28)',
+                orbThree: 'rgba(89, 194, 132, 0.22)',
+                scene: 0xf5f7fb,
+                glassA: 0xd7eefc,
+                glassB: 0xfafcff,
+                glassC: 0xe7ddff,
+                pointLight: 0x9fd3f6,
+                pointLightTwo: 0xc9b0ff,
+                particles: 0x6b7f94,
+                gridGlow: 'rgba(16, 24, 40, 0.05)'
+            }
+        };
+
+        function getPreferredTheme() {
+            const storedTheme = window.localStorage.getItem('theme');
+            if (storedTheme === 'dark' || storedTheme === 'light') {
+                return storedTheme;
+            }
+
+            return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+
+        function applyTheme(theme) {
+            const resolvedTheme = theme === 'light' ? 'light' : 'dark';
+            const palette = themeConfig[resolvedTheme];
+
+            state.theme = resolvedTheme;
+            document.documentElement.dataset.theme = resolvedTheme;
+            document.body.dataset.theme = resolvedTheme;
+            document.documentElement.style.setProperty('--bg', palette.background);
+            document.documentElement.style.setProperty('--panel', palette.panel);
+            document.documentElement.style.setProperty('--panel-strong', palette.panelStrong);
+            document.documentElement.style.setProperty('--border', palette.border);
+            document.documentElement.style.setProperty('--border-strong', palette.borderStrong);
+            document.documentElement.style.setProperty('--text', palette.text);
+            document.documentElement.style.setProperty('--muted', palette.muted);
+            document.documentElement.style.setProperty('--soft', palette.soft);
+            document.documentElement.style.setProperty('--accent', palette.accent);
+            document.documentElement.style.setProperty('--accent-2', palette.accent2);
+            document.documentElement.style.setProperty('--orb-one', palette.orbOne);
+            document.documentElement.style.setProperty('--orb-two', palette.orbTwo);
+            document.documentElement.style.setProperty('--orb-three', palette.orbThree);
+            document.documentElement.style.setProperty('--grid-glow', palette.gridGlow);
+
+            const toggle = document.getElementById('theme-toggle');
+            const toggleLabel = document.getElementById('theme-toggle-label');
+            if (toggle && toggleLabel) {
+                const nextLabel = resolvedTheme === 'dark' ? 'Light mode' : 'Dark mode';
+                toggle.setAttribute('aria-pressed', String(resolvedTheme === 'dark'));
+                toggleLabel.textContent = nextLabel;
+            }
+
+            if (state.renderer) {
+                state.renderer.setClearColor(palette.background, 1);
+            }
+
+            if (state.scene) {
+                state.scene.fog = new THREE.Fog(palette.background, 10, 40);
+            }
+
+            if (state.particles && state.particles.material) {
+                state.particles.material.color.setHex(palette.particles);
+                state.particles.material.opacity = resolvedTheme === 'dark' ? 0.38 : 0.26;
+            }
+
+            if (state.stars && state.stars.material) {
+                state.stars.material.color.setHex(palette.accent);
+                state.stars.material.opacity = resolvedTheme === 'dark' ? 0.1 : 0.08;
+            }
+
+            if (state.shapes.length) {
+                state.shapes.forEach((shape, index) => {
+                    const colors = [palette.glassA, palette.glassB, palette.glassC];
+                    shape.material.color.setHex(colors[index % colors.length]);
+                    shape.material.opacity = resolvedTheme === 'dark' ? [0.82, 0.62, 0.65][index % 3] : [0.62, 0.84, 0.58][index % 3];
+                    shape.material.roughness = resolvedTheme === 'dark' ? [0.15, 0.05, 0.18][index % 3] : [0.08, 0.03, 0.1][index % 3];
+                    shape.material.metalness = resolvedTheme === 'dark' ? [0.25, 0.55, 0.2][index % 3] : [0.1, 0.22, 0.08][index % 3];
+                    shape.material.needsUpdate = true;
+                });
+            }
+        }
+
+        function toggleTheme() {
+            const nextTheme = state.theme === 'dark' ? 'light' : 'dark';
+            window.localStorage.setItem('theme', nextTheme);
+            applyTheme(nextTheme);
         }
 
         function createProjectCard(project) {
@@ -340,31 +468,34 @@
 
         function initThree() {
             const container = document.getElementById('canvas-container');
+            const palette = themeConfig[state.theme];
             state.scene = new THREE.Scene();
+            state.scene.fog = new THREE.Fog(palette.background, 10, 40);
             state.camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 100);
             state.camera.position.set(0, 0, 10);
 
             state.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             state.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             state.renderer.setSize(window.innerWidth, window.innerHeight);
+            state.renderer.setClearColor(palette.background, 1);
             container.appendChild(state.renderer.domElement);
 
-            const ambient = new THREE.AmbientLight(0xffffff, 1.4);
+            const ambient = new THREE.AmbientLight(0xffffff, state.theme === 'dark' ? 1.4 : 1.95);
             state.scene.add(ambient);
 
-            const pointLight = new THREE.PointLight(0x7fd3ff, 3, 50);
+            const pointLight = new THREE.PointLight(palette.pointLight, state.theme === 'dark' ? 3 : 2.3, 50);
             pointLight.position.set(4, 5, 8);
             state.scene.add(pointLight);
 
-            const secondLight = new THREE.PointLight(0xff8bd4, 2, 40);
+            const secondLight = new THREE.PointLight(palette.pointLightTwo, state.theme === 'dark' ? 2 : 1.5, 40);
             secondLight.position.set(-6, -2, 6);
             state.scene.add(secondLight);
 
             const group = new THREE.Group();
             const materials = [
-                new THREE.MeshPhysicalMaterial({ color: 0x7fd3ff, roughness: 0.15, metalness: 0.25, transparent: true, opacity: 0.82 }),
-                new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.05, metalness: 0.55, transparent: true, opacity: 0.62 }),
-                new THREE.MeshPhysicalMaterial({ color: 0xffa0df, roughness: 0.18, metalness: 0.2, transparent: true, opacity: 0.65 })
+                new THREE.MeshPhysicalMaterial({ color: palette.glassA, roughness: state.theme === 'dark' ? 0.15 : 0.08, metalness: state.theme === 'dark' ? 0.25 : 0.1, transmission: state.theme === 'dark' ? 0.42 : 0.3, transparent: true, opacity: state.theme === 'dark' ? 0.82 : 0.62 }),
+                new THREE.MeshPhysicalMaterial({ color: palette.glassB, roughness: state.theme === 'dark' ? 0.05 : 0.03, metalness: state.theme === 'dark' ? 0.55 : 0.22, transmission: state.theme === 'dark' ? 0.28 : 0.18, transparent: true, opacity: state.theme === 'dark' ? 0.62 : 0.84 }),
+                new THREE.MeshPhysicalMaterial({ color: palette.glassC, roughness: state.theme === 'dark' ? 0.18 : 0.1, metalness: state.theme === 'dark' ? 0.2 : 0.08, transmission: state.theme === 'dark' ? 0.35 : 0.24, transparent: true, opacity: state.theme === 'dark' ? 0.65 : 0.58 })
             ];
             const geometries = [
                 new THREE.SphereGeometry(0.75, 32, 32),
@@ -404,14 +535,11 @@
                 );
             }
             backgroundGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particles, 3));
-            state.particles = new THREE.Points(
-                backgroundGeometry,
-                new THREE.PointsMaterial({ color: 0xffffff, size: 0.025, transparent: true, opacity: 0.45 })
-            );
+            state.particles = new THREE.Points(backgroundGeometry, new THREE.PointsMaterial({ color: palette.particles, size: 0.025, transparent: true, opacity: state.theme === 'dark' ? 0.45 : 0.25 }));
             state.scene.add(state.particles);
 
             const ringGeometry = new THREE.TorusGeometry(3.5, 0.08, 12, 180);
-            const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x7fd3ff, wireframe: true, transparent: true, opacity: 0.1 });
+            const ringMaterial = new THREE.MeshBasicMaterial({ color: palette.accent, wireframe: true, transparent: true, opacity: state.theme === 'dark' ? 0.1 : 0.08 });
             state.stars = new THREE.Mesh(ringGeometry, ringMaterial);
             state.stars.rotation.x = 1.4;
             state.scene.add(state.stars);
@@ -461,6 +589,7 @@
 
         Promise.all([loadContent(), new Promise((resolve) => window.addEventListener('load', resolve, { once: true }))])
             .then(() => {
+                applyTheme(getPreferredTheme());
                 initThree();
                 animate();
                 document.body.classList.add('ready');
@@ -487,6 +616,8 @@
                 element.classList.add('visible');
             }
         });
+
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
     </script>
 </body>
 </html>

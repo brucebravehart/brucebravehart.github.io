@@ -10,6 +10,10 @@
   --accent: #8be9ff;
   --accent-2: #ffd166;
   --shadow: 0 30px 90px rgba(0, 0, 0, 0.46);
+  --orb-one: rgba(139, 233, 255, 0.95);
+  --orb-two: rgba(205, 180, 255, 0.88);
+  --orb-three: rgba(159, 247, 200, 0.72);
+  --grid-glow: rgba(255, 255, 255, 0.03);
 }
 
 * {
@@ -26,20 +30,25 @@ body {
   background:
     radial-gradient(
       circle at 12% 10%,
-      rgba(139, 233, 255, 0.16),
+      color-mix(in srgb, var(--orb-one) 18%, transparent),
       transparent 24%
     ),
     radial-gradient(
       circle at 88% 18%,
-      rgba(205, 180, 255, 0.16),
+      color-mix(in srgb, var(--orb-two) 18%, transparent),
       transparent 22%
     ),
     radial-gradient(
       circle at 62% 88%,
-      rgba(159, 247, 200, 0.1),
+      color-mix(in srgb, var(--orb-three) 12%, transparent),
       transparent 22%
     ),
-    linear-gradient(180deg, #040712 0%, #091321 48%, #03050d 100%);
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bg) 90%, white 10%) 0%,
+      var(--bg) 48%,
+      color-mix(in srgb, var(--bg) 94%, black 6%) 100%
+    );
   color: var(--text);
   font-family: "Inter", sans-serif;
   overflow-x: hidden;
@@ -50,8 +59,8 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(var(--grid-glow) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-glow) 1px, transparent 1px);
   background-size: 80px 80px;
   opacity: 0.24;
   pointer-events: none;
@@ -125,8 +134,8 @@ a {
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.12),
-      rgba(255, 255, 255, 0.04)
+      color-mix(in srgb, var(--panel-strong) 68%, white 32%),
+      color-mix(in srgb, var(--panel) 86%, transparent 14%)
     ),
     var(--panel);
   backdrop-filter: blur(22px) saturate(1.5);
@@ -140,10 +149,10 @@ a {
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.2),
+    color-mix(in srgb, var(--text) 18%, transparent),
     transparent 20%,
     transparent 75%,
-    rgba(255, 255, 255, 0.08)
+    color-mix(in srgb, var(--text) 8%, transparent)
   );
   pointer-events: none;
   opacity: 0.48;
@@ -157,7 +166,7 @@ a {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.72),
+    color-mix(in srgb, var(--text) 60%, transparent),
     transparent
   );
   opacity: 0.4;
@@ -209,11 +218,11 @@ h3 {
   letter-spacing: 0.08em;
   background: linear-gradient(
     145deg,
-    rgba(139, 233, 255, 0.34),
-    rgba(255, 255, 255, 0.08)
+    color-mix(in srgb, var(--accent) 34%, transparent),
+    color-mix(in srgb, var(--text) 8%, transparent)
   );
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.44);
+  border: 1px solid var(--border-strong);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text) 46%, transparent);
 }
 
 .eyebrow,
@@ -231,6 +240,7 @@ dt {
   display: flex;
   gap: 18px;
   color: var(--muted);
+  align-items: center;
 }
 
 .topnav a {
@@ -348,8 +358,8 @@ h3 {
 .project-tech span {
   padding: 10px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--panel) 76%, white 24%);
   color: var(--text);
   font-size: 0.92rem;
 }
@@ -374,17 +384,19 @@ h3 {
   min-height: 48px;
   padding: 0 20px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: rgba(255, 255, 255, 0.98);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.18),
-    rgba(255, 255, 255, 0.05)
+    color-mix(in srgb, var(--text) 16%, transparent),
+    color-mix(in srgb, var(--panel) 88%, transparent)
   );
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 1px 0 color-mix(in srgb, var(--text) 42%, transparent),
     0 12px 24px rgba(2, 6, 23, 0.25);
   overflow: hidden;
+  cursor: pointer;
+  font: inherit;
   transition:
     transform 180ms ease,
     border-color 180ms ease,
@@ -398,8 +410,8 @@ h3 {
   background: linear-gradient(
     110deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.38) 22%,
-    rgba(255, 255, 255, 0.06) 38%,
+    color-mix(in srgb, var(--text) 32%, transparent) 22%,
+    color-mix(in srgb, var(--text) 8%, transparent) 38%,
     transparent 62%
   );
   transform: translateX(-120%);
@@ -409,9 +421,9 @@ h3 {
 .button:hover,
 .button:focus-visible {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: var(--border-strong);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 1px 0 color-mix(in srgb, var(--text) 52%, transparent),
     0 18px 36px rgba(2, 6, 23, 0.34);
 }
 
@@ -423,8 +435,8 @@ h3 {
 .button.ghost {
   background: linear-gradient(
     180deg,
-    rgba(139, 233, 255, 0.16),
-    rgba(205, 180, 255, 0.08)
+    color-mix(in srgb, var(--accent) 16%, transparent),
+    color-mix(in srgb, var(--accent-2) 8%, transparent)
   );
 }
 
@@ -444,8 +456,8 @@ h3 {
   width: fit-content;
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(7, 12, 24, 0.42);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, var(--panel-strong) 82%, transparent);
+  border: 1px solid var(--border);
 }
 
 .avatar {
@@ -467,8 +479,8 @@ h3 {
 .stat-grid div {
   padding: 16px;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: color-mix(in srgb, var(--panel) 78%, white 22%);
+  border: 1px solid var(--border);
 }
 
 dt {
@@ -527,11 +539,11 @@ dd {
   position: relative;
   display: grid;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--border);
   background: linear-gradient(
     180deg,
-    rgba(10, 16, 32, 0.72),
-    rgba(8, 12, 24, 0.92)
+    color-mix(in srgb, var(--panel-strong) 82%, white 18%),
+    color-mix(in srgb, var(--panel) 92%, transparent)
   );
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
   transform: translateY(16px);
@@ -554,7 +566,7 @@ dd {
 .project-card:hover,
 .project-card:focus-within {
   transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.28);
+  border-color: var(--border-strong);
   box-shadow: 0 34px 72px rgba(0, 0, 0, 0.34);
 }
 
@@ -590,8 +602,8 @@ dd {
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.08),
-    rgba(4, 8, 16, 0.66)
+    color-mix(in srgb, var(--text) 8%, transparent),
+    color-mix(in srgb, var(--bg) 72%, transparent)
   );
   pointer-events: none;
 }
@@ -606,15 +618,15 @@ dd {
   display: grid;
   place-items: center;
   border-radius: 18px;
-  color: rgba(255, 255, 255, 0.96);
+  color: var(--text);
   border: 1px solid var(--border-strong);
   background: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.18),
-    rgba(255, 255, 255, 0.05)
+    color-mix(in srgb, var(--text) 16%, transparent),
+    color-mix(in srgb, var(--panel) 82%, transparent)
   );
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    inset 0 1px 0 color-mix(in srgb, var(--text) 36%, transparent),
     0 12px 28px rgba(0, 0, 0, 0.18);
 }
 

@@ -352,18 +352,21 @@
 
             if (state.shapes.length) {
                 state.shapes.forEach((shape, index) => {
-                    const colors = [palette.glassA, palette.glassB, palette.glassC];
-                    shape.material.color.setHex(colors[index % colors.length]);
-                    shape.material.opacity = resolvedTheme === 'dark' ? [0.22, 0.16, 0.18][index % 3] : [0.14, 0.12, 0.13][index % 3];
-                    shape.material.roughness = resolvedTheme === 'dark' ? [0.03, 0.05, 0.04][index % 3] : [0.02, 0.03, 0.025][index % 3];
-                    shape.material.metalness = 0.02;
-                    shape.material.transmission = resolvedTheme === 'dark' ? 0.98 : 0.95;
-                    shape.material.ior = 1.48;
-                    shape.material.thickness = resolvedTheme === 'dark' ? 1.3 : 1.1;
+                    const colors = [0xff5f7a, 0xffb347, 0xfff176, 0x7cffb2, 0x76d7ff, 0x7e8cff, 0xc27cff];
+                    const color = new THREE.Color(colors[index % colors.length]);
+                    shape.material.color.copy(color);
+                    shape.material.emissive = color.clone().multiplyScalar(resolvedTheme === 'dark' ? 0.14 : 0.08);
+                    shape.material.emissiveIntensity = resolvedTheme === 'dark' ? 0.9 : 0.55;
+                    shape.material.opacity = resolvedTheme === 'dark' ? 0.34 : 0.22;
+                    shape.material.roughness = resolvedTheme === 'dark' ? 0.025 : 0.015;
+                    shape.material.metalness = 0.01;
+                    shape.material.transmission = resolvedTheme === 'dark' ? 0.99 : 0.97;
+                    shape.material.ior = 1.52;
+                    shape.material.thickness = resolvedTheme === 'dark' ? 1.55 : 1.25;
                     shape.material.clearcoat = 1;
-                    shape.material.clearcoatRoughness = 0.02;
-                    shape.material.attenuationColor = new THREE.Color(colors[index % colors.length]);
-                    shape.material.attenuationDistance = resolvedTheme === 'dark' ? 1.8 : 2.8;
+                    shape.material.clearcoatRoughness = 0.015;
+                    shape.material.attenuationColor = color.clone();
+                    shape.material.attenuationDistance = resolvedTheme === 'dark' ? 2.6 : 3.6;
                     shape.material.needsUpdate = true;
                 });
             }
@@ -486,7 +489,7 @@
             state.renderer.outputEncoding = THREE.sRGBEncoding;
             container.appendChild(state.renderer.domElement);
 
-            const ambient = new THREE.AmbientLight(palette.accent, state.theme === 'dark' ? 0.8 : 1.1);
+            const ambient = new THREE.AmbientLight(palette.accent, state.theme === 'dark' ? 0.95 : 1.15);
             state.scene.add(ambient);
 
             const pointLight = new THREE.PointLight(palette.pointLight, state.theme === 'dark' ? 3 : 2.3, 50);
@@ -497,11 +500,24 @@
             secondLight.position.set(-6, -2, 6);
             state.scene.add(secondLight);
 
+            const rainbowLights = [
+                [0xff5f7a, 2.2, 6, 2, 11],
+                [0xffb347, 1.9, -4, 3, 9],
+                [0x7cffb2, 2.0, 0, -4, 10],
+                [0x76d7ff, 2.1, -7, 1, 10]
+            ];
+
+            rainbowLights.forEach(([color, intensity, x, y, z]) => {
+                const light = new THREE.PointLight(color, state.theme === 'dark' ? intensity : intensity * 0.78, 28);
+                light.position.set(x, y, z);
+                state.scene.add(light);
+            });
+
             const group = new THREE.Group();
             const materials = [
-                new THREE.MeshPhysicalMaterial({ color: palette.glassA, roughness: 0.03, metalness: 0.02, transmission: 0.98, transparent: true, opacity: state.theme === 'dark' ? 0.22 : 0.14, ior: 1.48, thickness: 1.3, clearcoat: 1, clearcoatRoughness: 0.02, attenuationColor: new THREE.Color(palette.glassA), attenuationDistance: state.theme === 'dark' ? 1.8 : 2.8 }),
-                new THREE.MeshPhysicalMaterial({ color: palette.glassB, roughness: 0.04, metalness: 0.02, transmission: 0.97, transparent: true, opacity: state.theme === 'dark' ? 0.16 : 0.12, ior: 1.5, thickness: 1.1, clearcoat: 1, clearcoatRoughness: 0.03, attenuationColor: new THREE.Color(palette.glassB), attenuationDistance: state.theme === 'dark' ? 1.9 : 3.1 }),
-                new THREE.MeshPhysicalMaterial({ color: palette.glassC, roughness: 0.03, metalness: 0.02, transmission: 0.98, transparent: true, opacity: state.theme === 'dark' ? 0.18 : 0.13, ior: 1.47, thickness: 1.2, clearcoat: 1, clearcoatRoughness: 0.02, attenuationColor: new THREE.Color(palette.glassC), attenuationDistance: state.theme === 'dark' ? 1.8 : 2.9 })
+                new THREE.MeshPhysicalMaterial({ color: 0xff5f7a, roughness: 0.02, metalness: 0.01, transmission: 0.99, transparent: true, opacity: state.theme === 'dark' ? 0.34 : 0.22, ior: 1.52, thickness: 1.55, clearcoat: 1, clearcoatRoughness: 0.015, attenuationColor: new THREE.Color(0xff5f7a), attenuationDistance: state.theme === 'dark' ? 2.6 : 3.6, emissive: new THREE.Color(0xff5f7a).multiplyScalar(state.theme === 'dark' ? 0.14 : 0.08), emissiveIntensity: state.theme === 'dark' ? 0.9 : 0.55 }),
+                new THREE.MeshPhysicalMaterial({ color: 0xffb347, roughness: 0.025, metalness: 0.01, transmission: 0.99, transparent: true, opacity: state.theme === 'dark' ? 0.32 : 0.2, ior: 1.52, thickness: 1.45, clearcoat: 1, clearcoatRoughness: 0.015, attenuationColor: new THREE.Color(0xffb347), attenuationDistance: state.theme === 'dark' ? 2.6 : 3.6, emissive: new THREE.Color(0xffb347).multiplyScalar(state.theme === 'dark' ? 0.14 : 0.08), emissiveIntensity: state.theme === 'dark' ? 0.9 : 0.55 }),
+                new THREE.MeshPhysicalMaterial({ color: 0x76d7ff, roughness: 0.02, metalness: 0.01, transmission: 0.99, transparent: true, opacity: state.theme === 'dark' ? 0.31 : 0.21, ior: 1.52, thickness: 1.5, clearcoat: 1, clearcoatRoughness: 0.015, attenuationColor: new THREE.Color(0x76d7ff), attenuationDistance: state.theme === 'dark' ? 2.6 : 3.6, emissive: new THREE.Color(0x76d7ff).multiplyScalar(state.theme === 'dark' ? 0.14 : 0.08), emissiveIntensity: state.theme === 'dark' ? 0.9 : 0.55 })
             ];
             const geometries = [
                 new THREE.SphereGeometry(0.75, 32, 32),
@@ -541,7 +557,7 @@
                 );
             }
             backgroundGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particles, 3));
-            state.particles = new THREE.Points(backgroundGeometry, new THREE.PointsMaterial({ color: palette.particles, size: 0.025, transparent: true, opacity: state.theme === 'dark' ? 0.45 : 0.25 }));
+            state.particles = new THREE.Points(backgroundGeometry, new THREE.PointsMaterial({ color: palette.particles, size: 0.02, transparent: true, opacity: state.theme === 'dark' ? 0.35 : 0.18 }));
             state.scene.add(state.particles);
 
             window.addEventListener('resize', onResize);

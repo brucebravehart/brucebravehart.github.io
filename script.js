@@ -84,7 +84,10 @@ const projectIcons = {
     rocket: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3c3.5.3 6.7 3.5 7 7-.1 2.9-1.7 5.8-4.4 7.7l-1 3.7c-.1.3-.4.5-.7.4l-2.7-1.2-2.2 1.8c-.2.2-.5.2-.8.1-.3-.1-.5-.4-.4-.7l.7-3.2c-1.4-.5-2.7-1.2-3.9-2.2L3.2 15c-.2-.2-.3-.5-.2-.8.1-.3.3-.5.6-.6l3.1-.8c1-2.4 2.7-4.5 4.8-6.1C12.7 5.2 13.3 3.9 14 3Zm1.1 3.7c-1.8.2-3.8 1.3-5.5 3.1-1.5 1.5-2.6 3.3-3.1 5.1l2.2 2.2c1.8-.5 3.5-1.6 5-3.1 1.8-1.7 2.9-3.7 3.1-5.5-1.4-.9-1.7-1.2-1.7-1.8Zm1.8 2.3c-.5 1.4-1.4 2.8-2.6 4-1.2 1.2-2.6 2.1-4 2.6l1.7 1.7 1.4-.4.4-1.4 1.7-1.7 1.4-.4.4-1.4 1.7-1.7c-.1-.7-.3-1.5-.7-2.3ZM15 8.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"></path></svg>',
     cube: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4.6v9L12 20 4 15.6v-9L12 2Zm0 2.3-5.7 3.3L12 11l5.7-3.4L12 4.3Zm-6 5v6.9L11 17v-6.9L6 9.3Zm12 0-5 2.8v6.9l5-2.8V9.3Z"></path></svg>',
     spark: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 1.7 5.2L19 9l-5.3 1.8L12 16l-1.7-5.2L5 9l5.3-1.8L12 2Zm7 10 1.1 3.2L23 17l-2.9 1-1 2.9-1-2.9-2.9-1 2.9-1 1-3 1-.9ZM4 13l1.1 3.2L8 17l-2.9 1L4 21l-1.1-3-2.9-1 2.9-1L4 13Z"></path></svg>',
-    shield: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 20 5v6c0 5.2-3.5 9.9-8 11-4.5-1.1-8-5.8-8-11V5l8-3Zm0 3.1L6 7v4c0 3.8 2.4 7.3 6 8.5 3.6-1.2 6-4.7 6-8.5V7l-6-1.9Zm-1 3.2h2v6h-2v-6Zm0 7.2h2v2h-2v-2Z"></path></svg>'
+    shield: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 20 5v6c0 5.2-3.5 9.9-8 11-4.5-1.1-8-5.8-8-11V5l8-3Zm0 3.1L6 7v4c0 3.8 2.4 7.3 6 8.5 3.6-1.2 6-4.7 6-8.5V7l-6-1.9Zm-1 3.2h2v6h-2v-6Zm0 7.2h2v2h-2v-2Z"></path></svg>',
+    propeller: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-propeller"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 13a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M14.167 10.5c.722 -1.538 1.156 -3.043 1.303 -4.514c.22 -1.63 -.762 -2.986 -3.47 -2.986s-3.69 1.357 -3.47 2.986c.147 1.471 .581 2.976 1.303 4.514" /><path d="M13.169 16.751c.97 1.395 2.057 2.523 3.257 3.386c1.3 1 2.967 .833 4.321 -1.512c1.354 -2.345 .67 -3.874 -.85 -4.498c-1.348 -.608 -2.868 -.985 -4.562 -1.128" /><path d="M8.664 13c-1.693 .143 -3.213 .52 -4.56 1.128c-1.522 .623 -2.206 2.153 -.852 4.498s3.02 2.517 4.321 1.512c1.2 -.863 2.287 -1.991 3.258 -3.386" /></svg>',
+    radio: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-radio"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M14 3l-9.371 3.749a1 1 0 0 0 -.629 .928v11.323a1 1 0 0 0 1 1h14a1 1 0 0 0 1 -1v-11a1 1 0 0 0 -1 -1h-14.5" /><path d="M4 12h16" /><path d="M7 12v-2" /><path d="M17 16v.01" /><path d="M13 16v.01" /></svg>',
+    banknote: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-currency-dollar"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2" /><path d="M12 3v3m0 12v3" /></svg>'
 };
 
 function iconMarkup(name) {
@@ -305,19 +308,14 @@ async function loadContent() {
     const heroCopy = document.querySelector('.hero-copy h1');
     heroCopy.textContent = state.data.profile.hero;
     document.querySelector('.hero-text').textContent = state.data.profile.summary;
-    document.querySelector('.profile-card h2').textContent = state.data.profile.name;
-    document.querySelector('.profile-card .role').textContent = state.data.profile.role;
+
+
     document.querySelector('.brand-lockup strong').textContent = state.data.profile.name;
     document.querySelector('.topbar .eyebrow').textContent = state.data.profile.title;
 
-    const skillStrip = document.querySelector('.skill-strip');
-    skillStrip.innerHTML = state.data.profile.skills.map((skill) => `<span>${skill}</span>`).join('');
+
 
     const statValues = document.querySelectorAll('.stat-grid dd');
-    statValues[0].textContent = state.data.profile.focus;
-    statValues[1].textContent = state.data.profile.strengths;
-    statValues[2].textContent = state.data.profile.qualification;
-    statValues[3].textContent = state.data.profile.interest;
 
     const aboutCards = document.querySelectorAll('.about-card');
     aboutCards[0].querySelector('p').textContent = state.data.profile.interestsSummary;

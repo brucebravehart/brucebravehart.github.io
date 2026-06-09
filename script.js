@@ -264,7 +264,7 @@ import * as THREE from 'three';
 
         async function loadContent() {
             try {
-                const response = await fetch('script.json', { cache: 'no-store' });
+                const response = await fetch('config.json', { cache: 'no-store' });
                 state.data = response.ok ? await response.json() : fallbackData;
             } catch (error) {
                 state.data = fallbackData;

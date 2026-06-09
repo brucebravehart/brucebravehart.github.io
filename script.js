@@ -206,7 +206,7 @@ function applyTheme(theme) {
     }
 
     // 🔥 Apply it directly to the scene background
-    // state.scene.background = createGradientTexture();
+    state.scene.background = createGradientTexture();
 
 
     if (state.shapes.length) {
@@ -368,7 +368,9 @@ function initThree() {
     }
 
     // 🔥 Apply it directly to the scene background
-    state.scene.background = createGradientTexture();
+    let gradientTexture = createGradientTexture();
+    state.scene.background = gradientTexture;
+    state.scene.environment = gradientTexture;
     // apply room environment after background
     state.renderer.render(state.scene, state.camera);
     const pmremGenerator = new THREE.PMREMGenerator(state.renderer);
@@ -389,24 +391,59 @@ function initThree() {
         bevelThickness: 0.1,
         bevelSize: 0.1,
         bevelSegments: 10,
-        curveSegments: 32
+        curveSegments: 64
     };
 
     // 1. TRIANGLE (Using THREE.Shape)
     const triangleShape = new THREE.Shape();
-    triangleShape.moveTo(0, 0.8);
-    triangleShape.lineTo(0.7, -0.5);
-    triangleShape.lineTo(-0.7, -0.5);
+    const triangleArcRadius = 0.15; // Controls how rounded the corners are
+    // Define the 3 sharp peak coordinates of your original triangle
+    const p1 = { x: 0, y: 0.8 };     // Top peak
+    const p2 = { x: 0.7, y: -0.5 };   // Bottom right peak
+    const p3 = { x: -0.7, y: -0.5 };  // Bottom left peak
+
+    // --- TOP PEAK CORNER ---
+    // Start on the left slope, just before hitting the top peak
+    triangleShape.moveTo(-0.08, 0.65);
+    // Curve over the top peak to the right slope
+    triangleShape.quadraticCurveTo(p1.x, p1.y, 0.08, 0.65);
+
+    // --- BOTTOM RIGHT CORNER ---
+    // Line down the right slope to just before the bottom-right peak
+    triangleShape.lineTo(0.61, -0.34);
+    // Curve around the bottom-right peak to the bottom edge
+    triangleShape.quadraticCurveTo(p2.x, p2.y, 0.55, -0.5);
+
+    // --- BOTTOM LEFT CORNER ---
+    // Line across the bottom edge to just before the bottom-left peak
+    triangleShape.lineTo(-0.55, -0.5);
+    // Curve around the bottom-left peak back up to the left slope
+    triangleShape.quadraticCurveTo(p3.x, p3.y, -0.61, -0.34);
+
+    // Close the path back to our starting point
     triangleShape.closePath();
 
     // 2. SQUARE / RECTANGLE (Using THREE.Shape)
     const squareShape = new THREE.Shape();
-    const size = 0.6;
-    squareShape.moveTo(-size, -size);
-    squareShape.lineTo(size, -size);
-    squareShape.lineTo(size, size);
-    squareShape.lineTo(-size, size);
-    squareShape.closePath();
+    const width = 0.6;
+    const height = 0.6;
+    const squareArcRadius = 0.1; // Adjust this to make corners more or less rounded
+    const x = -width / 2;
+    const y = -height / 2;
+    // Start at bottom-left, just past the corner radius
+    squareShape.moveTo(x + squareArcRadius, y);
+    // Bottom edge to bottom-right corner
+    squareShape.lineTo(x + width - squareArcRadius, y);
+    squareShape.quadraticCurveTo(x + width, y, x + width, y + squareArcRadius);
+    // Right edge to top-right corner
+    squareShape.lineTo(x + width, y + height - squareArcRadius);
+    squareShape.quadraticCurveTo(x + width, y + height, x + width - squareArcRadius, y + height);
+    // Top edge to top-left corner
+    squareShape.lineTo(x + squareArcRadius, y + height);
+    squareShape.quadraticCurveTo(x, y + height, x, y + height - squareArcRadius);
+    // Left edge to bottom-left corner
+    squareShape.lineTo(x, y + squareArcRadius);
+    squareShape.quadraticCurveTo(x, y, x + squareArcRadius, y);
 
     // 3. Circle
     const radius = 0.7;
@@ -415,15 +452,15 @@ function initThree() {
 
     const group = new THREE.Group();
     const material = new THREE.MeshPhysicalMaterial({
-        color: new THREE.Color("#76d7ff"),               // Keep base color white so the background shines through
-        transparent: true,
+        color: new THREE.Color("#ffffff"),               // Keep base color white so the background shines through
+        transparent: false,
         opacity: state.theme === 'dark' ? 0.65 : 0.5, // important: otherwise we can't see through
 
         // --- THE GLASS EFFECT ---
-        transmission: 0.99,            // Pure transparency/light pass-through
-        roughness: 0.08,              // Slightly higher gives that luxurious "frosted/liquid" blur
-        metalness: 0.01,
-        ior: 1.5,                     // Standard glass index of refraction
+        transmission: 1.0,            // Pure transparency/light pass-through
+        roughness: 0.03,              // Slightly higher gives that luxurious "frosted/liquid" blur
+        metalness: 0.0,
+        ior: 2.5,                     // Standard glass index of refraction
         thickness: 0.5,               // Simulates physical depth inside the 2.5D shapes
 
         // --- CHROMATIC ABERRATION ---
@@ -434,19 +471,28 @@ function initThree() {
         clearcoatRoughness: 0.015,
 
         // --- LIQUID TINT ---
-        attenuationColor: new THREE.Color("#add8e6"), // Tints the glass where it gets thick
+        attenuationColor: new THREE.Color("#ffffff"), // Tints the glass where it gets thick
         attenuationDistance: 2.6,
         depthWrite: true,
-        side: THREE.FrontSide,
+        side: THREE.DoubleSide,
     });
+
+    let triangleGeo = new THREE.ExtrudeGeometry(triangleShape, extrudeSettings)
+    let squareGeo = new THREE.ExtrudeGeometry(squareShape, extrudeSettings)
+    let circleGeo = new THREE.ExtrudeGeometry(circleShape, extrudeSettings)
+    circleGeo.computeVertexNormals()
+
+
     const geometries = [
-        new THREE.ExtrudeGeometry(triangleShape, extrudeSettings),
-        new THREE.ExtrudeGeometry(squareShape, extrudeSettings),
-        new THREE.ExtrudeGeometry(circleShape, extrudeSettings),
-        new THREE.ExtrudeGeometry(triangleShape, extrudeSettings),
-        new THREE.ExtrudeGeometry(squareShape, extrudeSettings),
-        new THREE.ExtrudeGeometry(circleShape, extrudeSettings),
+        triangleGeo,
+        squareGeo,
+        circleGeo,
+        triangleGeo,
+        squareGeo,
+        circleGeo,
     ];
+
+    geometries
 
     const colors = [0xff5f7a, 0xffb347, 0xfff176, 0x7cffb2, 0x76d7ff, 0x7e8cff, 0xc27cff];
     geometries.forEach((geometry, index) => {
@@ -515,8 +561,8 @@ function animate() {
 
 Promise.all([loadContent(), new Promise((resolve) => window.addEventListener('load', resolve, { once: true }))])
     .then(() => {
-        applyTheme(getPreferredTheme());
         initThree();
+        applyTheme(getPreferredTheme());
         animate();
         document.body.classList.add('ready');
     })

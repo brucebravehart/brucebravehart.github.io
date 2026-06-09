@@ -211,7 +211,7 @@ function applyTheme(theme) {
 
     if (state.shapes.length) {
         state.shapes.forEach((shape, index) => {
-            const colors = [0xff5f7a, 0xffb347, 0xfff176, 0x7cffb2, 0x76d7ff, 0x7e8cff, 0xc27cff];
+            let colors = [0xff5f7a, 0xffb347, 0xfff176, 0x7cffb2, 0x76d7ff, 0x7e8cff, 0xc27cff];
             const color = new THREE.Color(colors[index % colors.length]);
             shape.material.color.copy(color);
 
@@ -219,7 +219,7 @@ function applyTheme(theme) {
             shape.material.roughness = resolvedTheme === 'dark' ? 0.025 : 0.015;
             shape.material.metalness = 0.01;
             shape.material.transmission = resolvedTheme === 'dark' ? 0.99 : 0.97;
-            shape.material.ior = 1.5;
+            shape.material.ior = 2.5;
             shape.material.thickness = resolvedTheme === 'dark' ? 1.55 : 1.25;
             shape.material.clearcoat = 1;
             shape.material.clearcoatRoughness = 0.015;
@@ -334,8 +334,8 @@ function initThree() {
     const palette = themeConfig[state.theme];
     state.scene = new THREE.Scene();
     state.scene.background = new THREE.Color('#ff9a9e');
-    state.camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 100);
-    state.camera.position.set(0, 0, 10);
+    state.camera = new THREE.PerspectiveCamera(3, window.innerWidth / window.innerHeight, 150, 250);
+    state.camera.position.set(0, 0, 200);
 
     state.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     state.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -378,10 +378,10 @@ function initThree() {
     state.scene.environment = pmremGenerator.fromScene(roomEnv).texture;
 
 
-    const ambient = new THREE.AmbientLight(0xffffff, 0.15);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.015);
     state.scene.add(ambient);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.01);
     directionalLight.position.set(8, 12, 4);
     state.scene.add(directionalLight);
 
@@ -396,37 +396,48 @@ function initThree() {
 
     // 1. TRIANGLE (Using THREE.Shape)
     const triangleShape = new THREE.Shape();
+
+    // 🌟 CONTROL VARIABLES
+    const sideLength = 0.8;         // Change this one variable to scale the entire triangle
     const triangleArcRadius = 0.15; // Controls how rounded the corners are
-    // Define the 3 sharp peak coordinates of your original triangle
-    const p1 = { x: 0, y: 0.8 };     // Top peak
-    const p2 = { x: 0.7, y: -0.5 };   // Bottom right peak
-    const p3 = { x: -0.7, y: -0.5 };  // Bottom left peak
+
+    // Mathematical calculation for an equilateral triangle centered at (0,0)
+    const circumRadius = sideLength / Math.sqrt(3);
+
+    // Define the 3 sharp peak coordinates dynamically
+    const p1 = { x: 0, y: circumRadius };                                               // Top peak
+    const p2 = { x: sideLength / 2, y: -circumRadius / 2 };                             // Bottom right peak
+    const p3 = { x: -sideLength / 2, y: -circumRadius / 2 };                            // Bottom left peak
+
+    // Calculate a dynamic offset factor for the curves based on your radius
+    // (Using an approximation so the curve starts gracefully before the peak)
+    const offset = triangleArcRadius * 0.6;
 
     // --- TOP PEAK CORNER ---
     // Start on the left slope, just before hitting the top peak
-    triangleShape.moveTo(-0.08, 0.65);
+    triangleShape.moveTo(-offset, p1.y - offset * 1.5);
     // Curve over the top peak to the right slope
-    triangleShape.quadraticCurveTo(p1.x, p1.y, 0.08, 0.65);
+    triangleShape.quadraticCurveTo(p1.x, p1.y, offset, p1.y - offset * 1.5);
 
     // --- BOTTOM RIGHT CORNER ---
     // Line down the right slope to just before the bottom-right peak
-    triangleShape.lineTo(0.61, -0.34);
+    triangleShape.lineTo(p2.x - offset * 0.7, p2.y + offset * 1.2);
     // Curve around the bottom-right peak to the bottom edge
-    triangleShape.quadraticCurveTo(p2.x, p2.y, 0.55, -0.5);
+    triangleShape.quadraticCurveTo(p2.x, p2.y, p2.x - offset * 1.3, p2.y);
 
     // --- BOTTOM LEFT CORNER ---
     // Line across the bottom edge to just before the bottom-left peak
-    triangleShape.lineTo(-0.55, -0.5);
+    triangleShape.lineTo(p3.x + offset * 1.3, p3.y);
     // Curve around the bottom-left peak back up to the left slope
-    triangleShape.quadraticCurveTo(p3.x, p3.y, -0.61, -0.34);
+    triangleShape.quadraticCurveTo(p3.x, p3.y, p3.x + offset * 0.7, p3.y + offset * 1.2);
 
     // Close the path back to our starting point
     triangleShape.closePath();
 
     // 2. SQUARE / RECTANGLE (Using THREE.Shape)
     const squareShape = new THREE.Shape();
-    const width = 0.6;
-    const height = 0.6;
+    const width = 0.5;
+    const height = 0.5;
     const squareArcRadius = 0.1; // Adjust this to make corners more or less rounded
     const x = -width / 2;
     const y = -height / 2;
@@ -446,7 +457,7 @@ function initThree() {
     squareShape.quadraticCurveTo(x, y, x + squareArcRadius, y);
 
     // 3. Circle
-    const radius = 0.7;
+    const radius = 0.4;
     const circleShape = new THREE.Shape();
     circleShape.absarc(0, 0, radius, 0, Math.PI * 2, false);
 
@@ -490,6 +501,12 @@ function initThree() {
         triangleGeo,
         squareGeo,
         circleGeo,
+        triangleGeo,
+        squareGeo,
+        circleGeo,
+        triangleGeo,
+        squareGeo,
+        circleGeo,
     ];
 
     geometries
@@ -497,13 +514,14 @@ function initThree() {
     const colors = [0xff5f7a, 0xffb347, 0xfff176, 0x7cffb2, 0x76d7ff, 0x7e8cff, 0xc27cff];
     geometries.forEach((geometry, index) => {
         const individualMaterial = material.clone();
-        individualMaterial.color.setHex([index % colors.length])
+        individualMaterial.color.setHex(colors[index % colors.length])
         individualMaterial.attenuationColor.setHex(colors[index % colors.length]);
         const mesh = new THREE.Mesh(geometry, individualMaterial);
+        mesh.renderOrder = index;
         mesh.position.set(
             THREE.MathUtils.randFloatSpread(7),
             THREE.MathUtils.randFloatSpread(4.5),
-            THREE.MathUtils.randFloatSpread(5) - 2.5
+            index * 2 - geometries.length * 2
         );
         mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
         mesh.scale.setScalar(1.1 + Math.random() * 0.55);

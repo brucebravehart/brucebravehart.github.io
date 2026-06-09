@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
         
         const fallbackData = {
             profile: {
@@ -195,8 +196,7 @@ import * as THREE from 'three';
                     const colors = [0xff5f7a, 0xffb347, 0xfff176, 0x7cffb2, 0x76d7ff, 0x7e8cff, 0xc27cff];
                     const color = new THREE.Color(colors[index % colors.length]);
                     shape.material.color.copy(color);
-                    shape.material.emissive = color.clone().multiplyScalar(resolvedTheme === 'dark' ? 0.14 : 0.08);
-                    shape.material.emissiveIntensity = resolvedTheme === 'dark' ? 0.9 : 0.55;
+                    
                     shape.material.opacity = resolvedTheme === 'dark' ? 0.34 : 0.22;
                     shape.material.roughness = resolvedTheme === 'dark' ? 0.025 : 0.015;
                     shape.material.metalness = 0.01;
@@ -327,35 +327,44 @@ import * as THREE from 'three';
             state.renderer.toneMapping = THREE.ACESFilmicToneMapping;
             state.renderer.toneMappingExposure = state.theme === 'dark' ? 1.05 : 0.95;
             state.renderer.outputEncoding = THREE.sRGBEncoding;
+            
             container.appendChild(state.renderer.domElement);
 
             // Create the Colorful Gradient Background
-            // We use a large plane with vertex colors to create a smooth, dynamic gradient mesh
-            const bgGeometry = new THREE.PlaneGeometry(200, 20, 10, 10);
-            const count = bgGeometry.attributes.position.count;
-            const colors = [];
+            function createGradientTexture() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 512;
+                canvas.height = 512;
+                const ctx = canvas.getContext('2d');
 
-            const color1 = new THREE.Color('#2e1065');
-            const color2 = new THREE.Color('#0f172a');
-            const color3 = new THREE.Color('#030712');
+                // Create a beautiful diagonal light gradient
+                const gradient = ctx.createLinearGradient(0, 0, 512, 512);
+                gradient.addColorStop(0, '#ff9a9e');
+                gradient.addColorStop(0.5, '#fecfef');
+                gradient.addColorStop(1, '#a1c4fd');
 
-            for (let i = 0; i < count; i++) {
-                // Mix colors based on vertex position to create a smooth gradient
-                const mixRatio = (bgGeometry.attributes.position.getY(i) + 10) / 20;
-                const finalColor = color1.clone().lerp(color3, mixRatio);
-                colors.push(finalColor.r, finalColor.g, finalColor.b);
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, 512, 512);
+
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.colorSpace = THREE.SRGBColorSpace; // Keeps colors vibrant
+                return texture;
             }
-            bgGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-            const bgMaterial = new THREE.MeshBasicMaterial({ vertexColors: true });
-            const backgroundMesh = new THREE.Mesh(bgGeometry, bgMaterial);
-            backgroundMesh.position.z = -5; // Push it way to the back
-            //state.scene.add(backgroundMesh);
 
-            const ambient = new THREE.AmbientLight(0xffffff, 0.7);
+            // 🔥 Apply it directly to the scene background
+            state.scene.background = createGradientTexture();
+            // apply room environment after background
+            state.renderer.render(state.scene, state.camera);
+            const pmremGenerator = new THREE.PMREMGenerator(state.renderer);
+            const roomEnv = new RoomEnvironment(state.renderer);
+            state.scene.environment = pmremGenerator.fromScene(roomEnv).texture;
+            
+
+            const ambient = new THREE.AmbientLight(0xffffff, 0.15);
             state.scene.add(ambient);
 
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-            directionalLight.position.set(5, 5, 5);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            directionalLight.position.set(8, 12, 4);
             state.scene.add(directionalLight);
 
             const extrudeSettings = {
@@ -383,8 +392,31 @@ import * as THREE from 'three';
             squareShape.closePath();
 
             const group = new THREE.Group();
-            const material = 
-                new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.01, metalness: 0.0, transmission: 0.9, transparent: true, opacity: 1.0, ior: 2.0, thickness: 0.5, clearcoat: 1.0, clearcoatRoughness: 0.05, attenuationColor: new THREE.Color(0xff5f7a), attenuationDistance: 0.8, emissive: new THREE.Color(0xff5f7a).multiplyScalar(state.theme === 'dark' ? 0.22 : 0.14), emissiveIntensity: state.theme === 'dark' ? 1.15 : 0.8 , dispersion: 5.0});
+            const material = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff,               // Keep base color white so the background shines through
+                transparent: true,
+                opacity: 1.0,
+                
+                // --- THE GLASS EFFECT ---
+                transmission: 0.9,            // Pure transparency/light pass-through
+                roughness: 0.08,              // Slightly higher gives that luxurious "frosted/liquid" blur
+                metalness: 0.0,
+                ior: 1.5,                     // Standard glass index of refraction
+                thickness: 0.5,               // Simulates physical depth inside the 2.5D shapes
+                
+                // --- CHROMATIC ABERRATION ---
+                dispersion: 5.0,              // Adds the rainbow fringing on the edges!
+
+                // --- SURFACE SHINE ---
+                clearcoat: 1.0,               // Gives it a sleek, polished outer shell
+                clearcoatRoughness: 0.02,
+                
+                // --- LIQUID TINT ---
+                //attenuationColor: new THREE.Color('#ff9a9e'), // Tints the glass where it gets thick
+                attenuationDistance: 0.5,
+                depthWrite: true,
+                side: THREE.FrontSide
+            });
             const geometries = [
                 new THREE.ExtrudeGeometry(triangleShape, extrudeSettings),
                 new THREE.ExtrudeGeometry(squareShape, extrudeSettings),
@@ -414,18 +446,7 @@ import * as THREE from 'three';
 
             state.scene.add(group);
 
-            const backgroundGeometry = new THREE.BufferGeometry();
-            const particles = [];
-            for (let index = 0; index < 1200; index += 1) {
-                particles.push(
-                    THREE.MathUtils.randFloatSpread(30),
-                    THREE.MathUtils.randFloatSpread(30),
-                    THREE.MathUtils.randFloatSpread(20)
-                );
-            }
-            backgroundGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particles, 3));
-            state.particles = new THREE.Points(backgroundGeometry, new THREE.PointsMaterial({ color: palette.particles, size: 0.018, transparent: true, opacity: state.theme === 'dark' ? 0.28 : 0.14 }));
-            state.scene.add(state.particles);
+            
 
             window.addEventListener('resize', onResize);
             window.addEventListener('pointermove', onPointerMove, { passive: true });

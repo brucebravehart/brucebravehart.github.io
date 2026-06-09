@@ -3,8 +3,8 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 const fallbackData = {
     profile: {
-        name: 'Example 1',
-        title: 'GitHub Pages landing page',
+        name: 'Robert',
+        title: 'Personal Webpage',
         hero: 'Example 1 builds polished interfaces, practical systems, and memorable web experiences.',
         summary: 'This space is for example-driven positioning: product-minded engineering, expressive visuals, and a bias toward shipping. It is tuned for people who care about refined UI, clear architecture, and motion that supports the message instead of hiding it.',
         role: 'Builder of elegant tools, expressive pages, and dependable shipping pipelines.',
@@ -22,25 +22,24 @@ const fallbackData = {
     },
     projects: [
         {
-            name: 'example 1',
-            tag: 'Showcase',
-            description: 'A reflective dashboard concept with animated panels, layered blur, and a calm information hierarchy.',
-            repo: 'https://github.com/example/example-1',
-            website: 'https://example.com',
+            name: 'Interactive ATC',
+            tag: 'Simulation',
+            description: 'A realtime trainer for Air-Traffic-Control Radio Calls from the Cockpit in VR',
+            repo: 'https://github.com/brucebravehart/interactive-atc',
             image: 'https://picsum.photos/seed/example-1/900/700',
             icon: 'rocket',
-            tech: ['TypeScript', 'Glass UI', 'Motion'],
+            tech: ['Unity', 'VR', 'Whisper'],
             accent: '#8be9ff'
         },
         {
-            name: 'example 2',
+            name: 'pager',
             tag: 'Utility',
-            description: 'An experimental layout system for compact content cards and bold call-to-action sections.',
+            description: 'A Progressive Web Application to create custom Alarms between peers, fully implemented in the Cloud',
             repo: 'https://github.com/example/example-2',
             website: null,
             image: 'https://picsum.photos/seed/example-2/900/700',
             icon: 'cube',
-            tech: ['Rust', 'Systems', 'Layout'],
+            tech: ['Rust', 'PWA', 'Cloud'],
             accent: '#ffd166'
         },
         {
@@ -475,7 +474,7 @@ function initThree() {
         thickness: 0.5,               // Simulates physical depth inside the 2.5D shapes
 
         // --- CHROMATIC ABERRATION ---
-        dispersion: 5.0,              // Adds the rainbow fringing on the edges!
+        dispersion: 10.0,              // Adds the rainbow fringing on the edges!
 
         // --- SURFACE SHINE ---
         clearcoat: 1.0,               // Gives it a sleek, polished outer shell

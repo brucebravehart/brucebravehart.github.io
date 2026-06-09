@@ -608,3 +608,16 @@ document.querySelectorAll('.reveal').forEach((element) => {
 });
 
 document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+
+const menuToggle = document.getElementById('menu-toggle');
+const navLinks = document.getElementById('nav-links');
+
+menuToggle.addEventListener('click', () => {
+    // Toggle the open class to show/hide the menu
+    navLinks.classList.toggle('open');
+
+    // Accessibility bonus: Update ARIA attributes
+    const isOpen = navLinks.classList.contains('open');
+    menuToggle.setAttribute('aria-expanded', isOpen);
+});

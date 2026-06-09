@@ -810,3 +810,66 @@ dd {
     transition-duration: 0.01ms !important;
   }
 }
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.menu-toggle span {
+  width: 100%;
+  height: 3px;
+  background-color: currentColor; /* Matches text color seamlessly */
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: flex; /* Show hamburger button */
+  }
+
+  /* Hide links by default on mobile and position them as a dropdown */
+  .nav-links {
+    display: none;
+    top: 100%; /* Sits directly beneath your glass-panel topbar */
+    right: 0;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    padding: 1rem 0;
+    box-sizing: border-box;
+    position: static;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  /* 🌟 The magic class that drops the menu down */
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links a,
+  .theme-toggle {
+    margin: 0.75rem 0; /* Add spacing to stacked links */
+  }
+
+  .topnav {
+    width: 100%;
+  }
+}
+
+.topbar.glass-panel {
+  overflow: visible;
+}

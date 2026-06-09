@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A liquid-glass GitHub Pages landing page with animated 3D background and project showcase.">
+    <meta name="description"
+        content="A liquid-glass GitHub Pages landing page with animated 3D background and project showcase.">
     <title>Example 1 | Liquid Glass Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script type="importmap">
         {
@@ -18,6 +22,7 @@
         }
     </script>
 </head>
+
 <body>
     <div id="canvas-container" aria-hidden="true"></div>
     <div class="orb orb-one" aria-hidden="true"></div>
@@ -33,12 +38,19 @@
             </div>
         </div>
         <nav class="topnav" aria-label="Primary">
-            <a href="#about">About</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
-            <button class="theme-toggle button ghost small" id="theme-toggle" type="button" aria-pressed="false">
-                <span class="theme-toggle-label" id="theme-toggle-label">Dark mode</span>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
+            <div class="nav-links" id="nav-links">
+                <a href="#about">About</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+                <button class="theme-toggle button ghost small" id="theme-toggle" type="button" aria-pressed="false">
+                    <span class="theme-toggle-label" id="theme-toggle-label">Dark mode</span>
+                </button>
+            </div>
         </nav>
     </header>
 
@@ -48,8 +60,10 @@
                 <p class="eyebrow">Highlighted up front</p>
                 <h1>Example 1 builds polished interfaces, practical systems, and memorable web experiences.</h1>
                 <p class="hero-text">
-                    This space is for example-driven positioning: product-minded engineering, expressive visuals, and a bias toward shipping.
-                    It is tuned for people who care about refined UI, clear architecture, and motion that supports the message instead of hiding it.
+                    This space is for example-driven positioning: product-minded engineering, expressive visuals, and a
+                    bias toward shipping.
+                    It is tuned for people who care about refined UI, clear architecture, and motion that supports the
+                    message instead of hiding it.
                 </p>
 
                 <div class="skill-strip" aria-label="Skills and interests">
@@ -68,7 +82,8 @@
 
             <aside class="profile-card glass-panel reveal">
                 <div class="profile-badge">Example 1</div>
-                <img class="avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=example-1" alt="Illustrated avatar for Example 1">
+                <img class="avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=example-1"
+                    alt="Illustrated avatar for Example 1">
                 <h2>Example 1</h2>
                 <p class="role">Builder of elegant tools, expressive pages, and dependable shipping pipelines.</p>
 
@@ -138,7 +153,8 @@
                     <p class="eyebrow">Showcase</p>
                     <h2>Selected projects</h2>
                 </div>
-                <p class="section-note">Each tile opens the repository. If a project has a live website, a second action is shown.</p>
+                <p class="section-note">Each tile opens the repository. If a project has a live website, a second action
+                    is shown.</p>
             </div>
 
             <div id="projects-grid" class="projects-grid" aria-live="polite"></div>
@@ -149,11 +165,13 @@
                 <div>
                     <p class="eyebrow">Contact</p>
                     <h2>Make the page yours later</h2>
-                    <p class="section-note">This version uses filler data like Example 1 so you can swap in your real profile and repositories without changing the structure.</p>
+                    <p class="section-note">This version uses filler data like Example 1 so you can swap in your real
+                        profile and repositories without changing the structure.</p>
                 </div>
                 <div class="cta-row compact">
                     <a class="button reflective" href="mailto:hello@example.com">Email me</a>
-                    <a class="button ghost" href="https://github.com/brucebravehart" target="_blank" rel="noreferrer">GitHub</a>
+                    <a class="button ghost" href="https://github.com/brucebravehart" target="_blank"
+                        rel="noreferrer">GitHub</a>
                 </div>
             </div>
         </section>
@@ -166,4 +184,5 @@
 
     <script type="module" src="./script.js"></script>
 </body>
+
 </html>

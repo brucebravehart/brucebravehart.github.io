@@ -1,0 +1,66 @@
+{
+  "profile": {
+    "name": "Example 1",
+    "title": "GitHub Pages landing page",
+    "hero": "Example 1 builds polished interfaces, practical systems, and memorable web experiences.",
+    "summary": "This space is for example-driven positioning: product-minded engineering, expressive visuals, and a bias toward shipping. It is tuned for people who care about refined UI, clear architecture, and motion that supports the message instead of hiding it.",
+    "role": "Builder of elegant tools, expressive pages, and dependable shipping pipelines.",
+    "skills": ["Liquid UI design", "3D motion systems", "Rust and web tooling", "Prototype-to-product work", "Open source polish"],
+    "focus": "Design-forward engineering",
+    "strengths": "Systems, polish, motion",
+    "qualification": "Example certification, example 1",
+    "interest": "Interactive visuals and tooling",
+    "interestsSummary": "Example 1 enjoys interfaces that feel tactile, story-driven, and slightly futuristic.",
+    "interests": ["Ambient motion and generative visuals", "Fast front ends with careful detail", "Lean systems that stay maintainable"],
+    "skillsSummary": "Replace the filler data here with your actual strengths when you are ready.",
+    "skillsDetail": ["Rust, TypeScript, and modern JavaScript", "Three.js, CSS animation, and UI composition", "Accessible layouts and responsive systems"],
+    "qualificationsSummary": "Use this section to surface the strongest proof points immediately.",
+    "qualifications": ["Example qualification one", "Example qualification two", "Example qualification three"]
+  },
+  "projects": [
+    {
+      "name": "example 1",
+      "tag": "Showcase",
+      "description": "A reflective dashboard concept with animated panels, layered blur, and a calm information hierarchy.",
+      "repo": "https://github.com/example/example-1",
+      "website": "https://example.com",
+      "image": "https://picsum.photos/seed/example-1/900/700",
+      "icon": "rocket",
+      "tech": ["TypeScript", "Glass UI", "Motion"],
+      "accent": "#8be9ff"
+    },
+    {
+      "name": "example 2",
+      "tag": "Utility",
+      "description": "An experimental layout system for compact content cards and bold call-to-action sections.",
+      "repo": "https://github.com/example/example-2",
+      "website": null,
+      "image": "https://picsum.photos/seed/example-2/900/700",
+      "icon": "cube",
+      "tech": ["Rust", "Systems", "Layout"],
+      "accent": "#ffd166"
+    },
+    {
+      "name": "example 3",
+      "tag": "Portfolio",
+      "description": "A content-first portfolio module designed to highlight projects without feeling boxy or repetitive.",
+      "repo": "https://github.com/example/example-3",
+      "website": "https://example.org",
+      "image": "https://picsum.photos/seed/example-3/900/700",
+      "icon": "spark",
+      "tech": ["JavaScript", "Content", "Showcase"],
+      "accent": "#ffafcc"
+    },
+    {
+      "name": "example 4",
+      "tag": "Component",
+      "description": "A component exploration focused on buttons, sheen effects, and animated depth cues.",
+      "repo": "https://github.com/example/example-4",
+      "website": null,
+      "image": "https://picsum.photos/seed/example-4/900/700",
+      "icon": "shield",
+      "tech": ["CSS", "Buttons", "UI"],
+      "accent": "#cdb4db"
+    }
+  ]
+}

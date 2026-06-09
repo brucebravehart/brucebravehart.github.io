@@ -245,7 +245,7 @@ dt {
 
 .topnav a {
   position: relative;
-  padding: 8px 2px;
+  padding: 8px 6px;
   transition: color 180ms ease;
 }
 

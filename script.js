@@ -208,21 +208,30 @@ function applyTheme(theme) {
     }
 
     // 🔥 Apply it directly to the scene background
-    state.scene.background = createGradientTexture();
+    let gradientTexture = createGradientTexture();
+    state.scene.background = gradientTexture;
+
+
+    state.scene.environmentIntensity = state.theme === "dark" ? 0.2 : 1.0;
 
 
     if (state.shapes.length) {
         state.shapes.forEach((shape, index) => {
-            let colors = [0xff5f7a, 0xffb347, 0xfff176, 0x7cffb2, 0x76d7ff, 0x7e8cff, 0xc27cff];
+            let brightColors = [0xff5f7a, 0xffb347, 0xfff176, 0x7cffb2, 0x76d7ff, 0x7e8cff, 0xc27cff];
+
+
+
+            let colors = brightColors
+
             const color = new THREE.Color(colors[index % colors.length]);
             shape.material.color.copy(color);
 
             shape.material.opacity = resolvedTheme === 'dark' ? 0.34 : 0.22;
-            shape.material.roughness = resolvedTheme === 'dark' ? 0.025 : 0.015;
+            shape.material.roughness = resolvedTheme === 'dark' ? 0.001 : 0.015;
             shape.material.metalness = 0.01;
             shape.material.transmission = resolvedTheme === 'dark' ? 0.99 : 0.97;
             shape.material.ior = 2.5;
-            shape.material.thickness = resolvedTheme === 'dark' ? 1.55 : 1.25;
+            shape.material.thickness = resolvedTheme === 'dark' ? 0.2 : 1.25;
             shape.material.clearcoat = 1;
             shape.material.clearcoatRoughness = 0.015;
             shape.material.attenuationColor = color.clone();
@@ -367,7 +376,6 @@ function initThree() {
     // 🔥 Apply it directly to the scene background
     let gradientTexture = createGradientTexture();
     state.scene.background = gradientTexture;
-    state.scene.environment = gradientTexture;
     // apply room environment after background
     state.renderer.render(state.scene, state.camera);
     const pmremGenerator = new THREE.PMREMGenerator(state.renderer);
@@ -378,7 +386,7 @@ function initThree() {
     const ambient = new THREE.AmbientLight(0xffffff, 0.015);
     state.scene.add(ambient);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.01);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.1);
     directionalLight.position.set(8, 12, 4);
     state.scene.add(directionalLight);
 

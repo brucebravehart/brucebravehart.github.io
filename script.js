@@ -186,11 +186,6 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
             
 
-            if (state.particles && state.particles.material) {
-                state.particles.material.color.setHex(palette.particles);
-                state.particles.material.opacity = resolvedTheme === 'dark' ? 0.38 : 0.26;
-            }
-
             if (state.shapes.length) {
                 state.shapes.forEach((shape, index) => {
                     const colors = [0xff5f7a, 0xffb347, 0xfff176, 0x7cffb2, 0x76d7ff, 0x7e8cff, 0xc27cff];
@@ -201,7 +196,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
                     shape.material.roughness = resolvedTheme === 'dark' ? 0.025 : 0.015;
                     shape.material.metalness = 0.01;
                     shape.material.transmission = resolvedTheme === 'dark' ? 0.99 : 0.97;
-                    shape.material.ior = 1.52;
+                    shape.material.ior = 1.5;
                     shape.material.thickness = resolvedTheme === 'dark' ? 1.55 : 1.25;
                     shape.material.clearcoat = 1;
                     shape.material.clearcoatRoughness = 0.015;
@@ -324,9 +319,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
             state.renderer.setSize(window.innerWidth, window.innerHeight);
             state.renderer.setClearColor(palette.background, 1);
             state.renderer.physicallyCorrectLights = true;
-            state.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            state.renderer.toneMappingExposure = state.theme === 'dark' ? 1.05 : 0.95;
-            state.renderer.outputEncoding = THREE.sRGBEncoding;
+            state.renderer.outputEncoding = THREE.SRGBColorSpace;
             
             container.appendChild(state.renderer.domElement);
 
@@ -339,9 +332,9 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
                 // Create a beautiful diagonal light gradient
                 const gradient = ctx.createLinearGradient(0, 0, 512, 512);
-                gradient.addColorStop(0, '#ff9a9e');
-                gradient.addColorStop(0.5, '#fecfef');
-                gradient.addColorStop(1, '#a1c4fd');
+                gradient.addColorStop(0, state.theme === "dark" ? '#000000': '#ff9a9e');
+                gradient.addColorStop(0.5, state.theme === "dark" ? '#3f004d': '#fecfef');
+                gradient.addColorStop(1, state.theme === "dark" ? '#040076': '#a1c4fd');
 
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, 512, 512);
@@ -370,9 +363,10 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
             const extrudeSettings = {
                 depth: 0.25,           // How thick the shape is (Z-axis)
                 bevelEnabled: true,    // Adds a slight rounded edge to catch glass highlights
-                bevelThickness: 0.04,
-                bevelSize: 0.03,
-                bevelSegments: 3
+                bevelThickness: 0.1,
+                bevelSize: 0.1,
+                bevelSegments: 10,
+                curveSegments: 32
             };
 
             // 1. TRIANGLE (Using THREE.Shape)
@@ -391,16 +385,21 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
             squareShape.lineTo(-size, size);
             squareShape.closePath();
 
+            // 3. Circle
+            const radius = 0.7;
+            const circleShape = new THREE.Shape();
+            circleShape.absarc(0, 0, radius, 0, Math.PI * 2, false);
+
             const group = new THREE.Group();
             const material = new THREE.MeshPhysicalMaterial({
-                color: 0xffffff,               // Keep base color white so the background shines through
+                color: new THREE.Color("#76d7ff"),               // Keep base color white so the background shines through
                 transparent: true,
-                opacity: 1.0,
+                opacity: state.theme === 'dark' ? 0.65 : 0.5, // important: otherwise we can't see through
                 
                 // --- THE GLASS EFFECT ---
-                transmission: 0.9,            // Pure transparency/light pass-through
+                transmission: 0.99,            // Pure transparency/light pass-through
                 roughness: 0.08,              // Slightly higher gives that luxurious "frosted/liquid" blur
-                metalness: 0.0,
+                metalness: 0.01,
                 ior: 1.5,                     // Standard glass index of refraction
                 thickness: 0.5,               // Simulates physical depth inside the 2.5D shapes
                 
@@ -409,25 +408,29 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
                 // --- SURFACE SHINE ---
                 clearcoat: 1.0,               // Gives it a sleek, polished outer shell
-                clearcoatRoughness: 0.02,
+                clearcoatRoughness: 0.015,
                 
                 // --- LIQUID TINT ---
-                //attenuationColor: new THREE.Color('#ff9a9e'), // Tints the glass where it gets thick
-                attenuationDistance: 0.5,
+                attenuationColor: new THREE.Color("#add8e6"), // Tints the glass where it gets thick
+                attenuationDistance: 2.6,
                 depthWrite: true,
-                side: THREE.FrontSide
+                side: THREE.FrontSide,
             });
             const geometries = [
                 new THREE.ExtrudeGeometry(triangleShape, extrudeSettings),
                 new THREE.ExtrudeGeometry(squareShape, extrudeSettings),
-                new THREE.CylinderGeometry(0.7, 0.7, 0.3, 32),
+                new THREE.ExtrudeGeometry(circleShape, extrudeSettings),
                 new THREE.ExtrudeGeometry(triangleShape, extrudeSettings),
                 new THREE.ExtrudeGeometry(squareShape, extrudeSettings),
-                new THREE.CylinderGeometry(0.7, 0.7, 0.3, 32)
+                new THREE.ExtrudeGeometry(circleShape, extrudeSettings),
             ];
-
+            
+            const colors = [0xff5f7a, 0xffb347, 0xfff176, 0x7cffb2, 0x76d7ff, 0x7e8cff, 0xc27cff];
             geometries.forEach((geometry, index) => {
-                const mesh = new THREE.Mesh(geometry, material);
+                const individualMaterial = material.clone();
+                individualMaterial.color.setHex([index % colors.length])
+                individualMaterial.attenuationColor.setHex(colors[index % colors.length]);
+                const mesh = new THREE.Mesh(geometry, individualMaterial);
                 mesh.position.set(
                     THREE.MathUtils.randFloatSpread(7),
                     THREE.MathUtils.randFloatSpread(4.5),

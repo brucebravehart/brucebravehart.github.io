@@ -14,6 +14,16 @@
   --orb-two: rgba(205, 180, 255, 0.88);
   --orb-three: rgba(159, 247, 200, 0.72);
   --grid-glow: rgba(255, 255, 255, 0.03);
+  --gradient-start: #ff9a9e;
+  --gradient-mid: #fecfef;
+  --gradient-end: #a1c4fd;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --gradient-start: #000000;
+  --gradient-mid: #3f004d;
+  --gradient-end: #040076;
 }
 
 * {
@@ -27,44 +37,16 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(
-      circle at 12% 10%,
-      color-mix(in srgb, var(--orb-one) 18%, transparent),
-      transparent 24%
-    ),
-    radial-gradient(
-      circle at 88% 18%,
-      color-mix(in srgb, var(--orb-two) 18%, transparent),
-      transparent 22%
-    ),
-    radial-gradient(
-      circle at 62% 88%,
-      color-mix(in srgb, var(--orb-three) 12%, transparent),
-      transparent 22%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--bg) 90%, white 10%) 0%,
-      var(--bg) 48%,
-      color-mix(in srgb, var(--bg) 94%, black 6%) 100%
-    );
+  /* A 135deg linear gradient perfectly matches the (0,0) to (512,512) diagonal canvas direction */
+  background: linear-gradient(
+    to bottom right,
+    var(--gradient-start) 0%,
+    var(--gradient-mid) 50%,
+    var(--gradient-end) 100%
+  );
   color: var(--text);
   font-family: "Inter", sans-serif;
   overflow-x: hidden;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--grid-glow) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-glow) 1px, transparent 1px);
-  background-size: 80px 80px;
-  opacity: 0.24;
-  pointer-events: none;
-  mask-image: radial-gradient(circle at center, black 28%, transparent 88%);
 }
 
 a {
@@ -75,56 +57,17 @@ a {
 #canvas-container {
   position: fixed;
   inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.orb {
-  position: fixed;
-  border-radius: 999px;
-  filter: blur(64px);
-  pointer-events: none;
-  opacity: 0.32;
   z-index: -1;
-  animation: drift 18s ease-in-out infinite alternate;
+  pointer-events: none;
+
+  /* Start hidden and transition smoothly over 1.2 seconds */
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
 }
 
-.orb-one {
-  width: 280px;
-  height: 280px;
-  top: 8%;
-  left: 8%;
-  background: radial-gradient(
-    circle,
-    rgba(139, 233, 255, 0.95),
-    transparent 68%
-  );
-}
-
-.orb-two {
-  width: 340px;
-  height: 340px;
-  top: 26%;
-  right: 7%;
-  background: radial-gradient(
-    circle,
-    rgba(205, 180, 255, 0.88),
-    transparent 70%
-  );
-  animation-duration: 22s;
-}
-
-.orb-three {
-  width: 260px;
-  height: 260px;
-  bottom: 10%;
-  left: 38%;
-  background: radial-gradient(
-    circle,
-    rgba(159, 247, 200, 0.72),
-    transparent 68%
-  );
-  animation-duration: 24s;
+/* When this class is added via JS, the canvas fades in */
+#canvas-container.ready {
+  opacity: 1;
 }
 
 .glass-panel {

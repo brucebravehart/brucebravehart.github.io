@@ -169,9 +169,7 @@ function applyTheme(theme) {
     document.documentElement.style.setProperty('--soft', palette.soft);
     document.documentElement.style.setProperty('--accent', palette.accent);
     document.documentElement.style.setProperty('--accent-2', palette.accent2);
-    document.documentElement.style.setProperty('--orb-one', palette.orbOne);
-    document.documentElement.style.setProperty('--orb-two', palette.orbTwo);
-    document.documentElement.style.setProperty('--orb-three', palette.orbThree);
+    document.documentElement.style.setProperty('--grid-glow', palette.gridGlow);
     document.documentElement.style.setProperty('--grid-glow', palette.gridGlow);
 
     const toggle = document.getElementById('theme-toggle');
@@ -347,7 +345,6 @@ function initThree() {
     state.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     state.renderer.setSize(window.innerWidth, window.innerHeight);
     state.renderer.setClearColor(palette.background, 1);
-    state.renderer.physicallyCorrectLights = true;
     state.renderer.outputEncoding = THREE.SRGBColorSpace;
 
     container.appendChild(state.renderer.domElement);
@@ -545,6 +542,10 @@ function initThree() {
 
     window.addEventListener('resize', onResize);
     window.addEventListener('pointermove', onPointerMove, { passive: true });
+
+    // Render first frame and enable canvas
+    state.renderer.render(state.scene, state.camera);
+    container.classList.add('ready');
 }
 
 function onPointerMove(event) {
